@@ -1,0 +1,17 @@
+D:\.net\DummyApp\DummyApp.Repository\bin\Debug\net6.0\DummyApp.Repository.deps.json
+D:\.net\DummyApp\DummyApp.Repository\bin\Debug\net6.0\DummyApp.Repository.runtimeconfig.json
+D:\.net\DummyApp\DummyApp.Repository\bin\Debug\net6.0\DummyApp.Repository.dll
+D:\.net\DummyApp\DummyApp.Repository\bin\Debug\net6.0\ref\DummyApp.Repository.dll
+D:\.net\DummyApp\DummyApp.Repository\bin\Debug\net6.0\DummyApp.Repository.pdb
+D:\.net\DummyApp\DummyApp.Repository\obj\Debug\net6.0\DummyApp.Repository.csproj.AssemblyReference.cache
+D:\.net\DummyApp\DummyApp.Repository\obj\Debug\net6.0\DummyApp.Repository.GeneratedMSBuildEditorConfig.editorconfig
+D:\.net\DummyApp\DummyApp.Repository\obj\Debug\net6.0\DummyApp.Repository.AssemblyInfoInputs.cache
+D:\.net\DummyApp\DummyApp.Repository\obj\Debug\net6.0\DummyApp.Repository.AssemblyInfo.cs
+D:\.net\DummyApp\DummyApp.Repository\obj\Debug\net6.0\DummyApp.Repository.csproj.CoreCompileInputs.cache
+D:\.net\DummyApp\DummyApp.Repository\obj\Debug\net6.0\DummyApp.Repository.dll
+D:\.net\DummyApp\DummyApp.Repository\obj\Debug\net6.0\ref\DummyApp.Repository.dll
+D:\.net\DummyApp\DummyApp.Repository\obj\Debug\net6.0\DummyApp.Repository.pdb
+D:\.net\DummyApp\DummyApp.Repository\obj\Debug\net6.0\DummyApp.Repository.genruntimeconfig.cache
+D:\.net\DummyApp\DummyApp.Repository\bin\Debug\net6.0\DummyApp.Entities.dll
+D:\.net\DummyApp\DummyApp.Repository\bin\Debug\net6.0\DummyApp.Entities.pdb
+D:\.net\DummyApp\DummyApp.Repository\obj\Debug\net6.0\DummyApp.Repository.csproj.CopyComplete

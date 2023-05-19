@@ -1,0 +1,21 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "c5adb8e7-9261-44b4-b484-0c4b2e8f16e1": {
+      "ProjectGuid": "c5adb8e7-9261-44b4-b484-0c4b2e8f16e1",
+      "DisplayName": "DummyApp",
+      "ColorIndex": 0
+    },
+    "a3fabefc-e93c-4884-adb2-ff458a250894": {
+      "ProjectGuid": "a3fabefc-e93c-4884-adb2-ff458a250894",
+      "DisplayName": "DummyApp.Entities",
+      "ColorIndex": 1
+    },
+    "9f7bb9e7-174c-4e31-921f-634440887435": {
+      "ProjectGuid": "9f7bb9e7-174c-4e31-921f-634440887435",
+      "DisplayName": "DummyApp.Repository",
+      "ColorIndex": 2
+    }
+  },
+  "NextColorIndex": 3
+}

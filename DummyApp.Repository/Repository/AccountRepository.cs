@@ -37,7 +37,7 @@ namespace DummyApp.Repository.Repository
 
                 using (SqlConnection con = new SqlConnection(connectionString))  // establishing connection with database 
                 {
-                    //<!-------- Registration Using Stored procedure -------->
+                    //<!-------- Registration Stored procedure -------->
 
                     //CREATE or alter PROCEDURE sp_user_insert
                     //(
@@ -57,7 +57,7 @@ namespace DummyApp.Repository.Repository
                     using (SqlCommand cmd = new SqlCommand("sp_user_insert", con)) // giving sp required params
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.Add("@FirstName", SqlDbType.VarChar).Value = model.FirstName;
+                        cmd.Parameters.Add("@FirstName", SqlDbType.VarChar).Value = model.FirstName; // Adding Values into params
                         cmd.Parameters.Add("@LastName", SqlDbType.VarChar).Value = model.LastName;
                         cmd.Parameters.Add("@Email", SqlDbType.VarChar).Value = model.Email;
                         cmd.Parameters.Add("@PhoneNumber", SqlDbType.VarChar).Value = model.PhoneNumber;

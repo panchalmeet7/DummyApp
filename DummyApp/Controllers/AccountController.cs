@@ -44,7 +44,7 @@ namespace DummyApp.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Login(LoginViewModel loginmodel, User user)
+        public IActionResult Login(LoginViewModel LoginViewModel, User user)
         {
             try
             {
@@ -52,29 +52,29 @@ namespace DummyApp.Controllers
 
                 using (SqlConnection con = new SqlConnection(connectionString))  // establishing connection with database 
                 {
-                    //<!-------- Login Using Stored procedure -------->
+                    //<!-------- Login Stored procedure -------->
 
-                    //CREATE or alter procedure sp_login_user
-                    //(
-                    //@Email VARCHAR(150),
-                    //@Password varchar(250)
-                    //)
-                    //as
-                    //declare @status int
-                    //if exists(select * from dbo.[User] where Email = @Email and Password = @Password)
-                    //      set @status = 1
-                    //else
-                    //      set @status = 0
-                    //select @status
+                    //  CREATE or ALTER PROCEDURE sp_login_user
+                    //  (
+                    //  @Email VARCHAR(150),
+                    //  @Password varchar(250)
+                    //  )
+                    //  as
+                    //  declare @status int
+                    //  if exists(select * from dbo.[User] where Email = @Email and Password = @Password)
+                    //        set @status = 1
+                    //  else
+                    //        set @status = 0
+                    //  select @status
 
-                    using (SqlCommand cmd = new SqlCommand("sp_login_user", con)) // giving sp required params
+                    using (SqlCommand cmd = new SqlCommand("sp_login_user", con))
                     {
                         con.Open();  // opening a connection
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.Add("@Email", SqlDbType.VarChar).Value = loginmodel.Email;
-                        cmd.Parameters.Add("@Password", SqlDbType.VarChar).Value = loginmodel.Password;
+                        cmd.Parameters.Add("@Email", SqlDbType.VarChar).Value = LoginViewModel.Email; // Adding Values into params
+                        cmd.Parameters.Add("@Password", SqlDbType.VarChar).Value = LoginViewModel.Password; // Adding Values into params
                         int status;
-                        status = Convert.ToInt16(cmd.ExecuteScalar());
+                        status = Convert.ToInt16(cmd.ExecuteScalar()); // ExecuteScalar method is used to retrieve a single value from DB
                         if (status == 1)
                         {
                             return RedirectToAction("Index", "CRUD");
@@ -84,7 +84,7 @@ namespace DummyApp.Controllers
                             TempData["Error"] = "Invalid User Credentials!!";
                             return RedirectToAction("Login", "Account");
                         }
-                       
+
                         cmd.ExecuteNonQuery(); // executing the query with given params
                         con.Close();
                     }

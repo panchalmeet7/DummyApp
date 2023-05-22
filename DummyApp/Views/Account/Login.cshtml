@@ -1,9 +1,11 @@
-﻿<section class="vh-100">
+﻿@model DummyApp.Entities.ViewModels.LoginViewModel
+
+<section class="vh-100">
     <div class="container-fluid h-custom">
         <div class="row d-flex justify-content-center align-items-center h-100">
             <partial name="_Loginpartial.cshtml" />
             <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-                <form>
+                <form method="POST" asp-action="Login" asp-controller="Account">
                     <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
                         <p class="lead fw-normal mb-0 me-3">Sign in with</p>
                         <button type="button" class="btn btn-primary btn-floating mx-1">
@@ -24,11 +26,12 @@
                     </div>
 
                     <!-- error msg-->
-                    <span>error msg will be shown here!</span>
+                   <span class="text-danger">@TempData["Error"]</span>
 
                     <!-- Email input -->
                     <div class="form-outline mb-4 mt-2">
                         <input type="email" id="form3Example3" class="form-control form-control-lg" 
+                               asp-for="Email"
                                placeholder="Enter a valid email address" />
                         <label class="form-label">Email address</label>
                     </div>
@@ -36,6 +39,7 @@
                     <!-- Password input -->
                     <div class="form-outline mb-3">
                         <input type="password" id="form3Example4" class="form-control form-control-lg"
+                               asp-for="Password"
                                placeholder="Enter password" />
                         <label class="form-label">Password</label>
                     </div>

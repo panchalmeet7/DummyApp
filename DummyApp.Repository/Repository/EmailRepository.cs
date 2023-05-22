@@ -10,7 +10,6 @@ namespace DummyApp.Repository.Repository
 {
     public class EmailRepository : IEmailRepository
     {
-        private readonly IEmailRepository _emailRepository;
         private readonly DummyAppContext _dummyAppContext;
         public EmailRepository(DummyAppContext dummyAppContext)
         {

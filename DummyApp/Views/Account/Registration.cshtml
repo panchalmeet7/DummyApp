@@ -29,10 +29,10 @@
 
                     <!-- First Name input -->
                     <div class="form-outline">
-                        <input type="text" class="form-control form-control-lg" placeholder="evan" asp-for="FirstName">
+                        <input type="text" class="form-control form-control-lg" placeholder="evan" asp-for="FirstName" id="fname">
 
                         <label class="form-label">First Name</label>
-                        
+
                     </div>
                     @Html.ValidationMessageFor(model => model.FirstName,"", new
                 {
@@ -40,7 +40,7 @@
                 })
                     <!-- Last Name input -->
                     <div class="form-outline mt-4">
-                        @Html.TextBoxFor(m => m.LastName , new { @class = "form-control form-control-lg", @placeholder= "last name" })
+                        @Html.TextBoxFor(m => m.LastName , new { @class = "form-control form-control-lg", @placeholder= "last name", @id="lname" })
                         <label class="form-label">Last Name</label>
                     </div>
                     @Html.ValidationMessageFor(model => model.LastName,"", new
@@ -49,16 +49,17 @@
                 })
                     <!-- Email input -->
                     <div class="form-outline mt-4">
-                        @Html.TextBoxFor(m => m.Email , new { @class = "form-control form-control-lg", @placeholder= "abc@gmail.com" })
+                        @Html.TextBoxFor(m => m.Email , new { @class = "form-control form-control-lg", @placeholder= "abc@gmail.com", @id="email" })
                         <label class="form-label">Email address</label>
                     </div>
                     @Html.ValidationMessageFor(model => model.Email,"", new
                 {
                 @class = "text-danger"
                 })
+                    <span class="text-danger">@TempData["Error"]</span>
                     <!-- Phone Number input -->
                     <div class="form-outline mt-4">
-                        @Html.TextBoxFor(m => m.PhoneNumber , new { @class = "form-control form-control-lg", @placeholder= "6457645754" })
+                        @Html.TextBoxFor(m => m.PhoneNumber , new { @class = "form-control form-control-lg", @placeholder= "6457645754", @id="phonenumber" })
                         <label class="form-label">Phone Number</label>
 
                     </div>
@@ -107,12 +108,12 @@
 
                     </div>
                 }
-                @if (@ViewBag.Message != null)
-                {
+                @* @if (@ViewBag.Message != null)
+                    {
                     <script type="text/javascript" lang="javascript">
-                        alert("@ViewBag.Message");
+                    alert('@ViewBag.Message');
                     </script>
-                }
+                    }*@
             </div>
         </div>
     </div>
@@ -142,14 +143,17 @@
         <!-- Right -->
         </div>*@
 </section>
-
-<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script>
 
     function ResetDetails()
     {
-        console.log("ResetDetails function call");
+        document.getElementById("fname").value = "";
+        document.getElementById("lname").value = "";
+        document.getElementById("email").value = "";
+        document.getElementById("phonenumber").value = "";
+        document.getElementById("txtPassword").value = "";
+        document.getElementById("txtConfirmPassword").value = "";
+        
     }
 </script>

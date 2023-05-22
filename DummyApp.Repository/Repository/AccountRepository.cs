@@ -16,7 +16,6 @@ namespace DummyApp.Repository.Repository
 {
     public class AccountRepository : IAccountRepository
     {
-        private readonly IAccountRepository _accountRepository;
         private readonly DummyAppContext _dummyAppContext;
 
         public AccountRepository(DummyAppContext dummyAppContext)
@@ -38,6 +37,8 @@ namespace DummyApp.Repository.Repository
 
                 using (SqlConnection con = new SqlConnection(connectionString))  // establishing connection with database 
                 {
+                    //<!-------- Registration Using Stored procedure -------->
+
                     //CREATE or alter PROCEDURE sp_user_insert
                     //(
                     //    @FirstName VARCHAR(50),
@@ -56,7 +57,6 @@ namespace DummyApp.Repository.Repository
                     using (SqlCommand cmd = new SqlCommand("sp_user_insert", con)) // giving sp required params
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-
                         cmd.Parameters.Add("@FirstName", SqlDbType.VarChar).Value = model.FirstName;
                         cmd.Parameters.Add("@LastName", SqlDbType.VarChar).Value = model.LastName;
                         cmd.Parameters.Add("@Email", SqlDbType.VarChar).Value = model.Email;
@@ -77,34 +77,34 @@ namespace DummyApp.Repository.Repository
             }
         }
 
-        public bool Validation_Input_UserEmail_Twice(RegistrationViewModel model)
-        {
-            bool isExists = false;
-            using (SqlConnection con = new SqlConnection(connectionString))  // establishing connection with database 
-            {
-                using (SqlCommand cmd = new SqlCommand()) // giving sp required params
-                {
-                    con.Open();
-                    cmd.Connection = con;
-                    cmd.CommandType = CommandType.Text;
-                    cmd.CommandText = "select Email from [dbo].[User] where Email =" + model.Email;
-                    cmd.Parameters.AddWithValue("@Email", model.Email);
-                    string email = Convert.ToString(cmd.ExecuteScalar());
-                    if (!string.IsNullOrEmpty(email))
-                    {
-                        isExists = true;
-                    }
-                    else
-                    {
-                        AddUser(model);
-                        isExists = false;
-                    }
-                    con.Close();
-                }
+        //public bool Validation_Input_UserEmail_Twice(RegistrationViewModel model)
+        //{
+        //    bool isExists = false;
+        //    using (SqlConnection con = new SqlConnection(connectionString))  // establishing connection with database 
+        //    {
+        //        using (SqlCommand cmd = new SqlCommand()) // giving sp required params
+        //        {
+        //            con.Open();
+        //            cmd.Connection = con;
+        //            cmd.CommandType = CommandType.Text;
+        //            cmd.CommandText = "select Email from [dbo].[User] where Email =" + model.Email;
+        //            cmd.Parameters.AddWithValue("@Email", model.Email);
+        //            string email = Convert.ToString(cmd.ExecuteScalar());
+        //            if (!string.IsNullOrEmpty(email))
+        //            {
+        //                isExists = true;
+        //            }
+        //            else
+        //            {
+        //                AddUser(model);
+        //                isExists = false;
+        //            }
+        //            con.Close();
+        //        }
 
-            }
-            return isExists;
-        }
+        //    }
+        //    return isExists;
+        //}
 
 
     }

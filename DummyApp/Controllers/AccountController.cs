@@ -8,6 +8,10 @@ using Microsoft.Data.SqlClient;
 using System.Configuration;
 using Microsoft.Extensions.Configuration;
 using System.Data;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 
 namespace DummyApp.Controllers
 {
@@ -17,11 +21,12 @@ namespace DummyApp.Controllers
         private readonly DummyAppContext _dummyAppContext;
         private readonly EmailRepository _emailRepository;
         private readonly AccountRepository _accountRepository;
+        private string connectionString = "Data Source=PCT38\\SQL2019;Initial Catalog=DummyApp;User Id=sa;Password=Tatva@123;TrustServerCertificate=True;Integrated Security=True";
         public AccountController(ILogger<AccountController> logger, IEmailRepository emailRepository, IAccountRepository accountRepository, DummyAppContext dummyAppContext)
         {
             _logger = logger;
-            emailRepository = _emailRepository;
-            accountRepository = _accountRepository;
+            _emailRepository = (EmailRepository?)emailRepository;
+            _accountRepository = (AccountRepository?)accountRepository;
             _dummyAppContext = dummyAppContext;
 
         }
@@ -32,13 +37,77 @@ namespace DummyApp.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("");
+            }
             return View();
         }
         [HttpPost]
-        public IActionResult Login(LoginViewModel model)
+        public IActionResult Login(LoginViewModel loginmodel, User user)
         {
-            return View();
+            try
+            {
+                //bool status = Validation_Input_UserEmail_Twice(model);
+
+                using (SqlConnection con = new SqlConnection(connectionString))  // establishing connection with database 
+                {
+                    //<!-------- Login Using Stored procedure -------->
+
+                    //CREATE or alter procedure sp_login_user
+                    //(
+                    //@Email VARCHAR(150),
+                    //@Password varchar(250)
+                    //)
+                    //as
+                    //declare @status int
+                    //if exists(select * from dbo.[User] where Email = @Email and Password = @Password)
+                    //      set @status = 1
+                    //else
+                    //      set @status = 0
+                    //select @status
+
+                    using (SqlCommand cmd = new SqlCommand("sp_login_user", con)) // giving sp required params
+                    {
+                        con.Open();  // opening a connection
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@Email", SqlDbType.VarChar).Value = loginmodel.Email;
+                        cmd.Parameters.Add("@Password", SqlDbType.VarChar).Value = loginmodel.Password;
+                        int status;
+                        status = Convert.ToInt16(cmd.ExecuteScalar());
+                        if (status == 1)
+                        {
+                            return RedirectToAction("Index", "CRUD");
+                        }
+                        else
+                        {
+                            TempData["Error"] = "Invalid User Credentials!!";
+                            return RedirectToAction("Login", "Account");
+                        }
+                       
+                        cmd.ExecuteNonQuery(); // executing the query with given params
+                        con.Close();
+                    }
+                }
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            //Login without sp -->
+
+            //var users = _dummyAppContext.Users.Where(u => u.Email == loginmodel.Email).FirstOrDefault();
+            //if (users.Email == loginmodel.Email && users.Password == loginmodel.Password)
+            //{
+            //   // Response.Redirect("Index", "CRUD");
+            //    //return RedirectToAction("Index", "CRUD");
+            //}
+            //TempData["Error"] = "Invalid User Credentials!!";
+            //return RedirectToAction("Login", "Account");
         }
+
         [HttpGet]
         public IActionResult Registration()
         {
@@ -48,49 +117,43 @@ namespace DummyApp.Controllers
         public IActionResult Registration(RegistrationViewModel model, User user)
         {
             var users = _dummyAppContext.Users.Where(u => u.Email == model.Email).FirstOrDefault();
-            if (model != null)
+
+            if (users.Email == model.Email)
             {
-                if (users.Email == model.Email)
-                {
-                    ViewBag.Message = "Opss Email already exsist, Please try another Email!!!";
-                    return View();
-                }
-                else
-                {
-                    _accountRepository.AddUser(model);
-                    return RedirectToAction("Login");
-                }
+                TempData["Error"] = "Oops Email already exists, Please try another Email!";
             }
             else
             {
-                return View();
+                _accountRepository.AddUser(model);
+                return RedirectToAction("Login");
             }
+            return View();
         }
-        public IActionResult Register(RegistrationViewModel model)
-        {
-            try
-            {
-                if (model != null)
-                {
-                    bool status = _accountRepository.Validation_Input_UserEmail_Twice(model);
-                    if (status)
-                    {
-                        ViewBag.Message = "Opss User Name already exsist, Please try another User Name !!!";
-                        return View("Registration");
-                    }
-                    else
-                    {
-                        ViewBag.Message = "Register New User successfully..";
-                        return View("Registration");
-                    }
-                }
-                return View("Registration");
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+        //public IActionResult Register(RegistrationViewModel model)
+        //{
+        //    try
+        //    {
+        //        if (model != null)
+        //        {
+        //            bool status = _accountRepository.Validation_Input_UserEmail_Twice(model);
+        //            if (status)
+        //            {
+        //                ViewBag.Message = "Opss User Name already exsist, Please try another User Name !!!";
+        //                return View("Registration");
+        //            }
+        //            else
+        //            {
+        //                ViewBag.Message = "Register New User successfully..";
+        //                return View("Registration");
+        //            }
+        //        }
+        //        return View("Registration");
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //}
         public IActionResult ResetPassword()
         {
             return View();

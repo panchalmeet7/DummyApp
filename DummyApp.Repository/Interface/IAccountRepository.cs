@@ -10,5 +10,6 @@ namespace DummyApp.Repository.Interface
     public interface IAccountRepository
     {
         public void AddUser(RegistrationViewModel model);
+        public bool Validation_Input_UserEmail_Twice(RegistrationViewModel model);
     }
 }

@@ -29,9 +29,10 @@
 
                     <!-- First Name input -->
                     <div class="form-outline">
-                        @Html.TextBoxFor(m => m.FirstName , new { @class = "form-control form-control-lg", @placeholder= "evan" })
-                        <label class="form-label">First Name</label>
+                        <input type="text" class="form-control form-control-lg" placeholder="evan" asp-for="FirstName">
 
+                        <label class="form-label">First Name</label>
+                        
                     </div>
                     @Html.ValidationMessageFor(model => model.FirstName,"", new
                 {
@@ -105,6 +106,12 @@
                         </button>
 
                     </div>
+                }
+                @if (@ViewBag.Message != null)
+                {
+                    <script type="text/javascript" lang="javascript">
+                        alert("@ViewBag.Message");
+                    </script>
                 }
             </div>
         </div>

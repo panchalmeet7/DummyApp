@@ -291,3 +291,12 @@ D:\.net\DummyApp\DummyApp\bin\Debug\net6.0\DummyApp.Entities.dll
 D:\.net\DummyApp\DummyApp\bin\Debug\net6.0\DummyApp.Repository.dll
 D:\.net\DummyApp\DummyApp\bin\Debug\net6.0\DummyApp.Entities.pdb
 D:\.net\DummyApp\DummyApp\bin\Debug\net6.0\DummyApp.Repository.pdb
+D:\.net\DummyApp\DummyApp\bin\Debug\net6.0\Microsoft.Graph.dll
+D:\.net\DummyApp\DummyApp\bin\Debug\net6.0\Microsoft.Graph.Core.dll
+D:\.net\DummyApp\DummyApp\bin\Debug\net6.0\Microsoft.Kiota.Abstractions.dll
+D:\.net\DummyApp\DummyApp\bin\Debug\net6.0\Microsoft.Kiota.Authentication.Azure.dll
+D:\.net\DummyApp\DummyApp\bin\Debug\net6.0\Microsoft.Kiota.Http.HttpClientLibrary.dll
+D:\.net\DummyApp\DummyApp\bin\Debug\net6.0\Microsoft.Kiota.Serialization.Form.dll
+D:\.net\DummyApp\DummyApp\bin\Debug\net6.0\Microsoft.Kiota.Serialization.Json.dll
+D:\.net\DummyApp\DummyApp\bin\Debug\net6.0\Microsoft.Kiota.Serialization.Text.dll
+D:\.net\DummyApp\DummyApp\bin\Debug\net6.0\Tavis.UriTemplates.dll

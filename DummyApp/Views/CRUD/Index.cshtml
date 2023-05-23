@@ -1,8 +1,87 @@
-﻿<!-- Navbar -->
+﻿@model IEnumerable<DummyApp.Entities.Models.Employee>
+@*@model DummyApp.Entities.ViewModels.EmployeeViewModel*@
+    
+<!-- Navbar -->
 <partial name="_Navbarpartial.cshtml" />
 <!-- Navbar -->
 
 <div class="container my-5">
+    <!---- Add Button ---->
+    <div class="mb-4" style="text-align: right;">
+        <button type="button" class="btn btn-outline-primary btn-rounded" data-mdb-toggle="modal" data-mdb-target="#AddEmployeeModal" data-mdb-ripple-color="blue"> <i class="bi bi-plus px-2">Add</i></button>
+    </div>
+    <!---- Add Button Modal ---->
+
+    <form id="AddEmployeeForm">
+        <div class="modal fade" id="AddEmployeeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog  modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <!-- 2 column grid layout with text inputs for the first and last names -->
+                        <div class="row mb-4">
+                            <div class="col">
+                                <div class="form-outline">
+                                    <input type="text" id="firstname" name="firstname" class="form-control" />
+                                    <label class="form-label" for="firstname">First name</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-outline">
+                                    <input type="text" id="lastname" name="lastname" class="form-control" />
+                                    <label class="form-label" for="lastname">Last name</label>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-outline mb-4">
+                            <input type="email" id="email" name="email" class="form-control" />
+                            <label class="form-label" for="email">Email Address</label>
+                        </div>
+
+
+                        <div class="form-outline mb-4">
+                            <input type="text" id="role" name="role" class="form-control" />
+                            <label class="form-label" for="role">Role</label>
+                        </div>
+
+
+                        <div class="form-outline mb-4">
+                            <input type="text" id="position" name="position" class="form-control" />
+                            <label class="form-label" for="position">Position</label>
+                        </div>
+
+
+                        <div class="form-outline mb-4">
+                            <input type="text" id="department" name="department" class="form-control" />
+                            <label class="form-label" for="department">Department</label>
+                        </div>
+
+
+                        <select class="form-select" id="status" name="status" aria-label="Default select example">
+                            <option selected>select status</option>
+                            <option value="ACTIVE">Active</option>
+                            <option value="ONBOARDING">Onboarding</option>
+                            <option value="AWAITING">Awaiting</option>
+                        </select>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+                        <button type="button" onclick="AddEmployee()" class="btn btn-primary">Save changes</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <!---- Add Button Modal End ---->
     <table class="table align-middle mb-0 bg-white">
         <thead class="bg-light">
             <tr>
@@ -14,246 +93,139 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>
-                    <div class="d-flex align-items-center">
-                        <img src="https://mdbootstrap.com/img/new/avatars/8.jpg"
-                             alt=""
-                             style="width: 45px; height: 45px"
-                             class="rounded-circle" />
-                        <div class="ms-3">
-                            <p class="fw-bold mb-1">John Doe</p>
-                            <p class="text-muted mb-0">john.doe@gmail.com</p>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <p class="fw-normal mb-1">Software engineer</p>
-                    <p class="text-muted mb-0">IT department</p>
-                </td>
-                <td>
-                    <span class="badge badge-success rounded-pill d-inline">Active</span>
-                </td>
-                <td>Senior</td>
-                <td>
-                    <button type="button"
-                            class="btn btn-link btn-rounded btn-sm fw-bold"
-                            data-mdb-ripple-color="dark">
-                        Edit
-                    </button>
-                    <button type="button"
-                            class="btn btn-link btn-rounded btn-sm fw-bold"
-                            data-mdb-ripple-color="dark">
-                        Delete
-                    </button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="d-flex align-items-center">
-                        <img src="https://mdbootstrap.com/img/new/avatars/6.jpg"
+            @foreach (var employees in Model)
+            {
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <img src="https://mdbootstrap.com/img/new/avatars/2.jpg"
                              class="rounded-circle"
                              alt=""
                              style="width: 45px; height: 45px" />
-                        <div class="ms-3">
-                            <p class="fw-bold mb-1">Alex Ray</p>
-                            <p class="text-muted mb-0">alex.ray@gmail.com</p>
+                            <div class="ms-3">
+                                <p class="fw-bold mb-1">@employees.EmployeeFirstName @employees.EmployeeLastName</p>
+                                <p class="text-muted mb-0">@employees.EmployeeEmail</p>
+                            </div>
                         </div>
-                    </div>
-                </td>
-                <td>
-                    <p class="fw-normal mb-1">Consultant</p>
-                    <p class="text-muted mb-0">Finance</p>
-                </td>
-                <td>
-                    <span class="badge badge-primary rounded-pill d-inline">Onboarding</span>
-                </td>
-                <td>Junior</td>
-                <td>
-                    <button type="button"
-                            class="btn btn-link btn-rounded btn-sm fw-bold"
-                            data-mdb-ripple-color="dark">
-                        Edit
-                    </button>
-                    <button type="button"
-                            class="btn btn-link btn-rounded btn-sm fw-bold"
-                            data-mdb-ripple-color="dark">
-                        Delete
-                    </button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="d-flex align-items-center">
-                        <img src="https://mdbootstrap.com/img/new/avatars/7.jpg"
-                             class="rounded-circle"
-                             alt=""
-                             style="width: 45px; height: 45px" />
-                        <div class="ms-3">
-                            <p class="fw-bold mb-1">Kate Hunington</p>
-                            <p class="text-muted mb-0">kate.hunington@gmail.com</p>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <p class="fw-normal mb-1">Designer</p>
-                    <p class="text-muted mb-0">UI/UX</p>
-                </td>
-                <td>
-                    <span class="badge badge-warning rounded-pill d-inline">Awaiting</span>
-                </td>
-                <td>Senior</td>
-                <td>
-                    <button type="button"
-                            class="btn btn-link btn-rounded btn-sm fw-bold"
-                            data-mdb-ripple-color="dark">
-                        Edit
-                    </button>
-                    <button type="button"
-                            class="btn btn-link btn-rounded btn-sm fw-bold"
-                            data-mdb-ripple-color="dark">
-                        Delete
-                    </button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="d-flex align-items-center">
-                        <img src="https://mdbootstrap.com/img/new/avatars/19.jpg"
-                             class="rounded-circle"
-                             alt=""
-                             style="width: 45px; height: 45px" />
-                        <div class="ms-3">
-                            <p class="fw-bold mb-1">Kate Hunington</p>
-                            <p class="text-muted mb-0">kate.hunington@gmail.com</p>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <p class="fw-normal mb-1">Designer</p>
-                    <p class="text-muted mb-0">UI/UX</p>
-                </td>
-                <td>
-                    <span class="badge badge-warning rounded-pill d-inline">Awaiting</span>
-                </td>
-                <td>Senior</td>
-                <td>
-                    <button type="button"
-                            class="btn btn-link btn-rounded btn-sm fw-bold"
-                            data-mdb-ripple-color="dark">
-                        Edit
-                    </button>
-                    <button type="button"
-                            class="btn btn-link btn-rounded btn-sm fw-bold"
-                            data-mdb-ripple-color="dark">
-                        Delete
-                    </button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="d-flex align-items-center">
-                        <img src="https://mdbootstrap.com/img/new/avatars/20.jpg"
-                             class="rounded-circle"
-                             alt=""
-                             style="width: 45px; height: 45px" />
-                        <div class="ms-3">
-                            <p class="fw-bold mb-1">Kate Hunington</p>
-                            <p class="text-muted mb-0">kate.hunington@gmail.com</p>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <p class="fw-normal mb-1">Designer</p>
-                    <p class="text-muted mb-0">UI/UX</p>
-                </td>
-                <td>
-                    <span class="badge badge-warning rounded-pill d-inline">Awaiting</span>
-                </td>
-                <td>Senior</td>
-                <td>
-                    <button type="button"
-                            class="btn btn-link btn-rounded btn-sm fw-bold"
-                            data-mdb-ripple-color="dark">
-                        Edit
-                    </button>
-                    <button type="button"
-                            class="btn btn-link btn-rounded btn-sm fw-bold"
-                            data-mdb-ripple-color="dark">
-                        Delete
-                    </button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="d-flex align-items-center">
-                        <img src="https://mdbootstrap.com/img/new/avatars/9.jpg"
-                             class="rounded-circle"
-                             alt=""
-                             style="width: 45px; height: 45px" />
-                        <div class="ms-3">
-                            <p class="fw-bold mb-1">Kate Hunington</p>
-                            <p class="text-muted mb-0">kate.hunington@gmail.com</p>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <p class="fw-normal mb-1">Designer</p>
-                    <p class="text-muted mb-0">UI/UX</p>
-                </td>
-                <td>
-                    <span class="badge badge-warning rounded-pill d-inline">Awaiting</span>
-                </td>
-                <td>Senior</td>
-                <td>
-                    <button type="button"
-                            class="btn btn-link btn-rounded btn-sm fw-bold"
-                            data-mdb-ripple-color="dark">
-                        Edit
-                    </button>
-                    <button type="button"
-                            class="btn btn-link btn-rounded btn-sm fw-bold"
-                            data-mdb-ripple-color="dark">
-                        Delete
-                    </button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="d-flex align-items-center">
-                        <img src="https://mdbootstrap.com/img/new/avatars/2.jpg"
-                             class="rounded-circle"
-                             alt=""
-                             style="width: 45px; height: 45px" />
-                        <div class="ms-3">
-                            <p class="fw-bold mb-1">Kate Hunington</p>
-                            <p class="text-muted mb-0">kate.hunington@gmail.com</p>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <p class="fw-normal mb-1">Designer</p>
-                    <p class="text-muted mb-0">UI/UX</p>
-                </td>
-                <td>
-                    <span class="badge badge-success rounded-pill d-inline p-2">Awaiting</span>
-                </td>
-                <td>Senior</td>
-                <td>
-                    <button type="button"
+                    </td>
+                    <td>
+                        <p class="fw-normal mb-1">@employees.EmployeeRole</p>
+                        <p class="text-muted mb-0">@employees.EmployeeDepartment </p>
+                    </td>
+                    <td>
+                        @if (@employees.Status == "ACTIVE")
+                        {
+                            <span class="badge badge-success rounded-pill d-inline p-2">@employees.Status</span>
+                        }
+                        else if (@employees.Status == "ONBOARDING")
+                        {
+                            <span class="badge badge-warning rounded-pill d-inline p-2">@employees.Status</span>
+                        }
+                        else if (@employees.Status == "AWAITING")
+                        {
+                            <span class="badge badge-danger rounded-pill d-inline p-2">@employees.Status</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-light rounded-pill d-inline p-2">@employees.Status</span>
+                        }
+                    </td>
+                    <td>@employees.Position</td>
+                    <td>
+                        <button type="button"
                             class="btn btn-link btn-rounded btn-sm fw-bold"
                             data-mdb-ripple-color="blue">
-                        Edit
-                    </button>
-                    <button type="button"
+                            Edit
+                        </button>
+                        <button type="button"
                             class="btn btn-link btn-rounded btn-sm fw-bold"
-                            data-mdb-ripple-color="red" 
-                            style="color: red;" >
-                        Delete
-                    </button>
-                </td>
-            </tr>
-            
+                            data-mdb-ripple-color="red"
+                            style="color: red;">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
 </div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script>
+
+    $(document).ready(function() {
+      console.log("validate function call");
+      $("#AddEmployeeForm").validate({
+
+          rules:{
+              firstname: "required",
+              lastname: "required",
+              email: {
+                  required : true,
+                  email : true
+              },
+              role: "required",
+              position: "required",
+              department: "required",
+              status :"required"
+
+          },
+
+          messages: {
+             firstname: "Please enter your firstname",
+             lastname: "Please enter your lastname",
+             role: "Please enter your role",
+             position: "Please enter your position",
+             department: "Please enter your department",
+             status : "Please enter your status"
+
+          }
+
+      });
+    });
+    // AddEmployee();
+
+
+    function AddEmployee(){
+       if($("#AddEmployeeForm").valid())
+       {
+           console.log("AddEmployee function call");
+           var firstname = $('#firstname').val();
+           var lastname = $('#lastname').val();
+           var email = $("#email").val();
+           var role = $('#role').val();
+           var position = $('#position').val();
+           var department = $('#department').val();
+           var status = $('#status').val();
+           //console.log(firstname);
+           //console.log(lastname);
+           //console.log(role);
+           //console.log(position);
+           //console.log(department);
+           //console.log(status);
+           $.ajax({
+               url:"/CRUD/AddEmployeeData",
+               type:"POST",
+               data: {
+                   firstname: firstname,
+                   lastname: lastname,
+                   email: email,
+                   role: role,
+                   position: position,
+                   department: department,
+                   status:status
+               },
+               success : function(data){
+                   console.log(data);
+                   location.reload();
+               },
+               error: function(e){
+                   console.log(e);
+               }
+           })
+       }
+
+    }
+
+</script>

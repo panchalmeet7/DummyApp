@@ -16,6 +16,8 @@ public partial class DummyAppContext : DbContext
     {
     }
 
+    public virtual DbSet<Employee> Employees { get; set; }
+
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -24,6 +26,48 @@ public partial class DummyAppContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Employee>(entity =>
+        {
+            entity.ToTable("Employee");
+
+            entity.Property(e => e.EmployeeId).HasColumnName("Employee_id");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.DeletedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("deleted_at");
+            entity.Property(e => e.EmployeeDepartment)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("Employee_Department");
+            entity.Property(e => e.EmployeeEmail)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("Employee_Email");
+            entity.Property(e => e.EmployeeFirstName)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("Employee_FirstName");
+            entity.Property(e => e.EmployeeLastName)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("Employee_LastName");
+            entity.Property(e => e.EmployeeRole)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("Employee_Role");
+            entity.Property(e => e.Position)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Status)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+        });
+
         modelBuilder.Entity<User>(entity =>
         {
             entity.ToTable("User");

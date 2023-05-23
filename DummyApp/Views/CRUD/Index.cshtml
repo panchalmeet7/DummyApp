@@ -20,7 +20,6 @@
                         <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
                         <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
                     </div>
-
                     <div class="modal-body">
                         <!-- 2 column grid layout with text inputs for the first and last names -->
                         <div class="row mb-4">
@@ -95,10 +94,11 @@
         <tbody>
             @foreach (var employees in Model)
             {
+                var image_link = "https://mdbootstrap.com/img/new/avatars/" + @employees.EmployeeId + ".jpg";
                 <tr>
                     <td>
                         <div class="d-flex align-items-center">
-                            <img src="https://mdbootstrap.com/img/new/avatars/2.jpg"
+                            <img src="@image_link"
                              class="rounded-circle"
                              alt=""
                              style="width: 45px; height: 45px" />

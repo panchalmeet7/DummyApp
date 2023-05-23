@@ -15,6 +15,8 @@ namespace DummyApp.Controllers
         {
             _dummyAppContext = dummyAppContext;
         }
+
+        /// <returns> All the records from Employee Table </returns>
         public IActionResult Index()
         {
             //create or alter procedure sp_GetAllEmolyeeData
@@ -27,29 +29,15 @@ namespace DummyApp.Controllers
            
             return View(GetAllEmployeeData);
         }
-
-        //public void GetEmployeeRecord()
-        //{
-        //    try
-        //    {
-        //        using (SqlConnection con = new SqlConnection(connectionString))
-        //        {
-        //            SqlCommand cmd = new SqlCommand("select * from Employee", con);
-        //            DataTable dt = new DataTable();
-        //            con.Open();
-        //            SqlDataReader sdr = cmd.ExecuteReader();
-        //            dt.Load(sdr);
-        //            con.Close();
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.Write(ex);
-        //        Console.Read();
-
-        //    }
-        //}
-
+       
+        /// <param name="firstname"></param>
+        /// <param name="lastname"></param>
+        /// <param name="email"></param>
+        /// <param name="role"></param>
+        /// <param name="position"></param>
+        /// <param name="department"></param>
+        /// <param name="status"></param>
+        /// <returns> All the Index View With all the dara that is inserted </returns>
         public IActionResult AddEmployeeData(string firstname, string lastname, string email, string role, string position, string department, string status)
         {
             try
@@ -100,6 +88,12 @@ namespace DummyApp.Controllers
                 Console.Read();
             }
             return RedirectToAction("Index", "CRUD");
+        }
+
+        public JsonResult GetSingleEmployeeRecord(int EmpID)
+        {
+            var Employee = _dummyAppContext.Employees.Where(emp => emp.EmployeeId == EmpID).FirstOrDefault();
+            return Json(Employee);
         }
     }
 }

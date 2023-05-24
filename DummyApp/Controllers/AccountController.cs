@@ -165,7 +165,23 @@ namespace DummyApp.Controllers
         }
         [HttpPost]
         public IActionResult ForgotPassword(ForgotPasswordViewModel forgotPasswordViewModel)
-        { 
+        {
+            string emailadd = forgotPasswordViewModel.Email;
+            if (!string.IsNullOrEmpty(emailadd))
+            {
+                byte[] time = BitConverter.GetBytes(DateTime.UtcNow.ToBinary());
+                byte[] key = Guid.NewGuid().ToByteArray();
+                string token = Convert.ToBase64String(time.Concat(key).ToArray());
+                var lnkHref = "https://localhost:7260/Account/ResetPassword?token=" + token + "&email=" + emailadd;
+                string subject = "Please Reset your password";
+                string body = "Link to reset your password :" + " " + lnkHref;
+                _emailRepository.SendEmail(emailadd, subject, body);
+            }
+            else
+            {
+
+            }
+          
             return View();
         }
     }

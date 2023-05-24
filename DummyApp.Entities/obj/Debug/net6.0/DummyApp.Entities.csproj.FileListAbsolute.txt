@@ -3,7 +3,6 @@ D:\.net\DummyApp\DummyApp.Entities\bin\Debug\net6.0\DummyApp.Entities.runtimecon
 D:\.net\DummyApp\DummyApp.Entities\bin\Debug\net6.0\DummyApp.Entities.dll
 D:\.net\DummyApp\DummyApp.Entities\bin\Debug\net6.0\ref\DummyApp.Entities.dll
 D:\.net\DummyApp\DummyApp.Entities\bin\Debug\net6.0\DummyApp.Entities.pdb
-D:\.net\DummyApp\DummyApp.Entities\obj\Debug\net6.0\DummyApp.Entities.csproj.AssemblyReference.cache
 D:\.net\DummyApp\DummyApp.Entities\obj\Debug\net6.0\DummyApp.Entities.GeneratedMSBuildEditorConfig.editorconfig
 D:\.net\DummyApp\DummyApp.Entities\obj\Debug\net6.0\DummyApp.Entities.AssemblyInfoInputs.cache
 D:\.net\DummyApp\DummyApp.Entities\obj\Debug\net6.0\DummyApp.Entities.AssemblyInfo.cs
@@ -12,3 +11,4 @@ D:\.net\DummyApp\DummyApp.Entities\obj\Debug\net6.0\DummyApp.Entities.dll
 D:\.net\DummyApp\DummyApp.Entities\obj\Debug\net6.0\ref\DummyApp.Entities.dll
 D:\.net\DummyApp\DummyApp.Entities\obj\Debug\net6.0\DummyApp.Entities.pdb
 D:\.net\DummyApp\DummyApp.Entities\obj\Debug\net6.0\DummyApp.Entities.genruntimeconfig.cache
+D:\.net\DummyApp\DummyApp.Entities\obj\Debug\net6.0\DummyApp.Entities.csproj.AssemblyReference.cache

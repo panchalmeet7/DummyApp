@@ -8,5 +8,6 @@ namespace DummyApp.Repository.Interface
 {
     public interface IEmailRepository
     {
+        public void SendEmail(string recipient, string subject, string body);
     }
 }

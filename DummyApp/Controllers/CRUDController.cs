@@ -1,9 +1,12 @@
 ﻿using DummyApp.Entities.Data;
+using DummyApp.Entities.Models;
 using DummyApp.Entities.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Data;
+using System.Text;
 
 namespace DummyApp.Controllers
 {
@@ -26,10 +29,10 @@ namespace DummyApp.Controllers
             //end
 
             var GetAllEmployeeData = _dummyAppContext.Employees.FromSqlRaw("sp_GetAllEmolyeeData").ToList();
-           
+
             return View(GetAllEmployeeData);
         }
-       
+
         /// <param name="firstname"></param>
         /// <param name="lastname"></param>
         /// <param name="email"></param>
@@ -90,10 +93,127 @@ namespace DummyApp.Controllers
             return RedirectToAction("Index", "CRUD");
         }
 
-        public JsonResult GetSingleEmployeeRecord(int EmpID)
+
+        /// <param name="EmployeeId"></param>
+        /// <returns> Json Result of Employee Data </returns>
+        [HttpGet]
+        public JsonResult GetSingleEmployeeRecord(int EmployeeId)
         {
-            var Employee = _dummyAppContext.Employees.Where(emp => emp.EmployeeId == EmpID).FirstOrDefault();
-            return Json(Employee);
+            var jsonResult = new StringBuilder();
+            List<Employee> employees = new List<Employee>();
+            try
+            {
+                //create or alter procedure sp_GetSingleEmolyee
+                //(@Employee_id int)
+                //as
+                //begin
+                // SELECT[Employee_id]
+                //      ,[Employee_FirstName]
+                //      ,[Employee_LastName]
+                //      ,[Employee_Email]
+                //      ,[Employee_Role]
+                //      ,[Employee_Department]
+                //      ,[Status]
+                //      ,[Position]
+                //      ,[created_at]
+                //      ,[updated_at]
+                //      ,[deleted_at]
+                //                FROM[dbo].[Employee]
+                //  WHERE Employee_id = @Employee_id
+                //  end
+                //GO
+
+                using (SqlConnection con = new SqlConnection(connectionString))  // establishing connection with database 
+                {
+                    using (SqlCommand cmd = new SqlCommand("sp_GetSingleEmolyee", con))
+                    {
+                        con.Open();  // opening a connection
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@Employee_id", SqlDbType.Int).Value = EmployeeId; // Adding Values into params
+
+                        var reader = cmd.ExecuteReader();
+                        if (!reader.HasRows)
+                        {
+                            jsonResult.Append("[]");
+                        }
+                        else
+                        {
+                            while (reader.Read())
+                            {
+                                Employee employee = new Employee()
+                                {
+                                    EmployeeId = (int)reader["Employee_id"],
+                                    EmployeeFirstName = (string)reader["Employee_FirstName"],
+                                    EmployeeLastName = (string)reader["Employee_LastName"],
+                                    EmployeeEmail = (string)reader["Employee_Email"],
+                                    EmployeeRole = (string)reader["Employee_Role"],
+                                    Position = (string)reader["Position"],
+                                    EmployeeDepartment = (string)reader["Employee_Department"],
+                                    Status = (string)reader["Status"],
+                                };
+                                employees.Append(employee);
+                                employees.Add(employee);
+                            }
+                        }
+                        con.Close();
+                    }
+                }
+
+                return Json(new { data = employees });
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("na thyu");
+                Console.ReadLine();
+            }
+
+            return Json(false);
+
+            //return Json(jsonResult, JsonRequestBehavior.AllowGet);
+            //return Json(new { data = jsonResult });
+
+
+            //<--------------- Previous Approch --------------------->
+
+            //var Employee = _dummyAppContext.Employees.Where(emp => emp.EmployeeId == EmployeeId).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Soft Delete into Employee Data
+        /// </summary>
+        /// <param name="EmployeeId"></param>
+        /// <returns>View</returns>
+        public IActionResult DeleteEmployeeData(int EmployeeId)
+        {
+            if (EmployeeId != 0)
+            {
+                try
+                {
+                    using (SqlConnection con = new SqlConnection(connectionString))
+                    {
+                        using (SqlCommand cmd = new SqlCommand("sp_deleteEmployee", con))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.Add("@deleted_at", SqlDbType.DateTime).Value = DateTime.Now;
+                            cmd.Parameters.Add("@Employee_id", SqlDbType.Int).Value = EmployeeId;
+                            con.Open();  // opening a connection
+                            cmd.ExecuteNonQuery(); // executing the query with given params
+                            con.Close();
+                        };
+                    };
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("na thyu");
+                    Console.Read();
+                }
+            }
+            else
+            {
+                return View("Index", new { message = "toaster msg" });
+            }
+
+            return RedirectToAction("Index", "CRUD");
         }
     }
 }

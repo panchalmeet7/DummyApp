@@ -158,9 +158,14 @@ namespace DummyApp.Controllers
         {
             return View();
         }
-
+        [HttpGet]
         public IActionResult ForgotPassword()
         {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult ForgotPassword(ForgotPasswordViewModel forgotPasswordViewModel)
+        { 
             return View();
         }
     }

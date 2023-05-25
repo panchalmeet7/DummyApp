@@ -179,7 +179,8 @@ namespace DummyApp.Controllers
             }
             else
             {
-
+                TempData["Error"] = "Sorry for the inconvenience";
+                return View();
             }
           
             return View();

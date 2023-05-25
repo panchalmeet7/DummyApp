@@ -72,7 +72,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
-                        <button type="button" onclick="AddEmployee()" class="btn btn-primary">Save changes</button>
+                        <button type="button" id="SaveChangesBtn" onclick="AddEmployee()" class="btn btn-primary">Save</button>
                     </div>
 
                 </div>
@@ -136,16 +136,14 @@
                             class="btn btn-link btn-rounded btn-sm fw-bold"
                             data-mdb-ripple-color="blue"
                             data-mdb-toggle="modal" data-mdb-target="#EditEmployeeModal"
-                            onclick="RetriveEmployeeData(@employees.EmployeeId)"
-                        >
+                            onclick="RetriveEmployeeData(@employees.EmployeeId)">
                             Edit
                         </button>
                         <button type="button"
                             class="btn btn-link btn-rounded btn-sm fw-bold"
                             data-mdb-ripple-color="red"
                             style="color: red;"
-                            onclick="DeleteEmployeeData(@employees.EmployeeId)"
-                        >
+                            onclick="DeleteEmployeeData(@employees.EmployeeId)">
                             Delete
                         </button>
                     </td>
@@ -175,6 +173,9 @@
                                                 <label class="form-label" for="elastname">Last name</label>
                                             </div>
                                         </div>
+
+                                        <input type="hidden" id="hidempid" name="elastname" class="form-control" />
+
                                     </div>
 
 
@@ -212,7 +213,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Update changes</button>
+                                    <button type="submit" id="UpdateChangesBtn" onclick="UpdateEmployeeData()" class="btn btn-primary">Update changes</button>
                                 </div>
                             </div>
                         </div>

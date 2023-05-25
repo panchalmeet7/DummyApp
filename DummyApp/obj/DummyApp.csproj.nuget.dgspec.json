@@ -45,6 +45,10 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.0.123, )"
+            },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
@@ -126,6 +130,10 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.0.123, )"
+            },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
@@ -214,6 +222,10 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.0.123, )"
+            },
             "Microsoft.AspNet.Mvc": {
               "target": "Package",
               "version": "[5.2.9, )"

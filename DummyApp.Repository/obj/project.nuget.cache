@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "G4cc0UxKYWDN+zfFNFA4TCJp/i8mvStrlxoQcnBlMisSEcYzUl8GTR+RiqGxg2/pfDOo9XPl39AjeeW+V0MAMw==",
+  "dgSpecHash": "j/X5KEn2czjK5TLyfNISQOrq686jMj/Q5CnQOu1FxtVklD3omaMw1Ptz4SiLc8aucIOHiCL2nCgzqasaIoaUiQ==",
   "success": true,
   "projectFilePath": "D:\\.net\\DummyApp\\DummyApp.Repository\\DummyApp.Repository.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\pct38\\.nuget\\packages\\azure.core\\1.30.0\\azure.core.1.30.0.nupkg.sha512",
     "C:\\Users\\pct38\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",
+    "C:\\Users\\pct38\\.nuget\\packages\\dapper\\2.0.123\\dapper.2.0.123.nupkg.sha512",
     "C:\\Users\\pct38\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\pct38\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",

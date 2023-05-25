@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "xRUZuCCzuSJCmEskqtiVqJqheRhqhZSksewegvZie5h7V9M1GJR/hN4r1sDC0QKv5nPD1SBLLTJBlx1Mmc1oNQ==",
+  "dgSpecHash": "aWZxNlX+4ZmPftqrMyGU7oJbR3X8OQSNpQlNNpxnkF8YJAcjCdywHx+8x+S9tgm6YeO/+Q/VkJyQsjzi99fsAg==",
   "success": true,
   "projectFilePath": "D:\\.net\\DummyApp\\DummyApp\\DummyApp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\pct38\\.nuget\\packages\\azure.core\\1.30.0\\azure.core.1.30.0.nupkg.sha512",
     "C:\\Users\\pct38\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",
+    "C:\\Users\\pct38\\.nuget\\packages\\dapper\\2.0.123\\dapper.2.0.123.nupkg.sha512",
     "C:\\Users\\pct38\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\pct38\\.nuget\\packages\\messagepack\\2.1.152\\messagepack.2.1.152.nupkg.sha512",
     "C:\\Users\\pct38\\.nuget\\packages\\messagepack.annotations\\2.1.152\\messagepack.annotations.2.1.152.nupkg.sha512",

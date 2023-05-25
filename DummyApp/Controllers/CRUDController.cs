@@ -1,4 +1,6 @@
-﻿using DummyApp.Entities.Data;
+﻿
+using Dapper;
+using DummyApp.Entities.Data;
 using DummyApp.Entities.Models;
 using DummyApp.Entities.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Data;
 using System.Text;
+
+
 
 namespace DummyApp.Controllers
 {
@@ -43,47 +47,66 @@ namespace DummyApp.Controllers
         /// <returns> All the Index View With all the dara that is inserted </returns>
         public IActionResult AddEmployeeData(string firstname, string lastname, string email, string role, string position, string department, string status)
         {
+
             try
             {
-                using (SqlConnection con = new SqlConnection(connectionString))
+                var parameters = new DynamicParameters();
+                parameters.Add("@Employee_FirstName", firstname);
+                parameters.Add("@Employee_LastName", lastname);
+                parameters.Add("@Employee_Email", email);
+                parameters.Add("@Employee_Role", role);
+                parameters.Add("@Position", position);
+                parameters.Add("@Employee_Department", department);
+                parameters.Add("@Status", status);
+                parameters.Add("@created_at", DateTime.Now);
+                var storedprocedure = "sp_AddEmpoyeeData";
+                using (var connection = new SqlConnection(connectionString))
                 {
-                    //create or alter procedure sp_AddEmpoyeeData
-                    //(
-                    //    @Employee_FirstName varchar(50),
-                    //    @Employee_LastName varchar(50),
-                    //    @Employee_Email varchar(50),
-                    //    @Employee_Role varchar(50),
-                    //    @Employee_Department varchar(50),
-                    //    @Status varchar(50),
-                    //    @Position varchar(50),
-                    //    @created_at datetime
-                    //)
-                    //as
-                    //begin
-                    //insert into[dbo].[Employee]
-                    //(Employee_FirstName, Employee_LastName, Employee_Email, Employee_Role, Employee_Department, Status, Position, created_at)
-                    //values
-                    //(@Employee_FirstName, @Employee_LastName, @Employee_Email, @Employee_Role, @Employee_Department, @Status, @Position, @created_at)
-
-                    //end
-
-                    using (SqlCommand cmd = new SqlCommand("sp_AddEmpoyeeData ", con))  // passing required params
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.Add("@Employee_FirstName", SqlDbType.VarChar).Value = firstname; // Adding Values into params
-                        cmd.Parameters.Add("@Employee_LastName", SqlDbType.VarChar).Value = lastname;
-                        cmd.Parameters.Add("@Employee_Email", SqlDbType.VarChar).Value = email;
-                        cmd.Parameters.Add("@Employee_Role", SqlDbType.VarChar).Value = role;
-                        cmd.Parameters.Add("@Employee_Department", SqlDbType.VarChar).Value = department;
-                        cmd.Parameters.Add("@Status", SqlDbType.VarChar).Value = status;
-                        cmd.Parameters.Add("@Position", SqlDbType.VarChar).Value = position;
-                        cmd.Parameters.Add("@created_at", SqlDbType.DateTime).Value = DateTime.Now;
-
-                        con.Open();  // opening a connection
-                        cmd.ExecuteNonQuery(); // executing the query with given params
-                        con.Close();
-                    }
+                    connection.Open();
+                    var exexute = connection.Execute(storedprocedure, parameters, commandType: CommandType.StoredProcedure);
+                    connection.Close();
                 }
+
+                //    //create or alter procedure sp_AddEmpoyeeData
+                //    //(
+                //    //    @Employee_FirstName varchar(50),
+                //    //    @Employee_LastName varchar(50),
+                //    //    @Employee_Email varchar(50),
+                //    //    @Employee_Role varchar(50),
+                //    //    @Employee_Department varchar(50),
+                //    //    @Status varchar(50),
+                //    //    @Position varchar(50),
+                //    //    @created_at datetime
+                //    //)
+                //    //as
+                //    //begin
+                //    //insert into[dbo].[Employee]
+                //    //(Employee_FirstName, Employee_LastName, Employee_Email, Employee_Role, Employee_Department, Status, Position, created_at)
+                //    //values
+                //    //(@Employee_FirstName, @Employee_LastName, @Employee_Email, @Employee_Role, @Employee_Department, @Status, @Position, @created_at)
+
+                //    //end
+
+                //using (SqlConnection con = new SqlConnection(connectionString))
+                //{
+
+                //    using (SqlCommand cmd = new SqlCommand("sp_AddEmpoyeeData ", con))  // passing required params
+                //    {
+                //        cmd.CommandType = CommandType.StoredProcedure;
+                //        cmd.Parameters.Add("@Employee_FirstName", SqlDbType.VarChar).Value = firstname; // Adding Values into params
+                //        cmd.Parameters.Add("@Employee_LastName", SqlDbType.VarChar).Value = lastname;
+                //        cmd.Parameters.Add("@Employee_Email", SqlDbType.VarChar).Value = email;
+                //        cmd.Parameters.Add("@Employee_Role", SqlDbType.VarChar).Value = role;
+                //        cmd.Parameters.Add("@Employee_Department", SqlDbType.VarChar).Value = department;
+                //        cmd.Parameters.Add("@Status", SqlDbType.VarChar).Value = status;
+                //        cmd.Parameters.Add("@Position", SqlDbType.VarChar).Value = position;
+                //        cmd.Parameters.Add("@created_at", SqlDbType.DateTime).Value = DateTime.Now;
+
+                //        con.Open();  // opening a connection
+                //        cmd.ExecuteNonQuery(); // executing the query with given params
+                //        con.Close();
+                //    }
+                //}
             }
             catch (Exception ex)
             {
@@ -178,6 +201,68 @@ namespace DummyApp.Controllers
             //var Employee = _dummyAppContext.Employees.Where(emp => emp.EmployeeId == EmployeeId).FirstOrDefault();
         }
 
+        [HttpPost]
+        public IActionResult UpdateEmployeeData(int empid, string firstname, string lastname, string email, string role, string position, string department, string status)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    //create or alter procedure sp_UpdateEmpoyeeData
+                    //(
+                    //    @Employee_id int,
+                    //    @Employee_FirstName varchar(50),
+                    //    @Employee_LastName varchar(50),
+                    //    @Employee_Email varchar(50),
+                    //    @Employee_Role varchar(50),
+                    //    @Employee_Department varchar(50),
+                    //    @Status varchar(50),
+                    //    @Position varchar(50),
+                    //    @updated_at datetime
+                    //)
+                    //as
+                    //begin
+                    //UPDATE[dbo].[Employee]
+                    //SET
+                    //Employee_FirstName = @Employee_FirstName,
+                    //Employee_LastName = @Employee_LastName,
+                    //Employee_Email = @Employee_Email,
+                    //Employee_Role = @Employee_Role,
+                    //Employee_Department = @Employee_Department,
+                    //Status = @Status,
+                    //Position = @Position,
+                    //updated_at = @updated_at
+
+                    //where Employee_id = @Employee_id;
+                    //end
+
+                    using (SqlCommand cmd = new SqlCommand("sp_UpdateEmpoyeeData", con))  // passing required params
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@Employee_id", SqlDbType.Int).Value = empid; // Adding Values into params
+                        cmd.Parameters.Add("@Employee_FirstName", SqlDbType.VarChar).Value = firstname;
+                        cmd.Parameters.Add("@Employee_LastName", SqlDbType.VarChar).Value = lastname;
+                        cmd.Parameters.Add("@Employee_Email", SqlDbType.VarChar).Value = email;
+                        cmd.Parameters.Add("@Employee_Role", SqlDbType.VarChar).Value = role;
+                        cmd.Parameters.Add("@Employee_Department", SqlDbType.VarChar).Value = department;
+                        cmd.Parameters.Add("@Status", SqlDbType.VarChar).Value = status;
+                        cmd.Parameters.Add("@Position", SqlDbType.VarChar).Value = position;
+                        cmd.Parameters.Add("@updated_at", SqlDbType.DateTime).Value = DateTime.Now;
+
+                        con.Open();  // opening a connection
+                        cmd.ExecuteNonQuery(); // executing the query with given params
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                Console.Read();
+            }
+            return RedirectToAction("Index", "CRUD");
+        }
+
         /// <summary>
         /// Soft Delete into Employee Data
         /// </summary>
@@ -189,6 +274,14 @@ namespace DummyApp.Controllers
             {
                 try
                 {
+                    //create or alter procedure sp_deleteEmployee
+                    //@deleted_at datetime,
+                    //@Employee_id int
+                    //as
+                    //begin
+                    //update Employee
+                    //SET deleted_at = @deleted_at where Employee_id = @Employee_id;
+                    //END
                     using (SqlConnection con = new SqlConnection(connectionString))
                     {
                         using (SqlCommand cmd = new SqlCommand("sp_deleteEmployee", con))

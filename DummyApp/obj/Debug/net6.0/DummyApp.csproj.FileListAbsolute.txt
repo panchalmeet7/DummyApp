@@ -307,3 +307,4 @@ D:\.net\DummyApp\DummyApp\bin\Debug\net6.0\System.Web.WebPages.Deployment.dll
 D:\.net\DummyApp\DummyApp\bin\Debug\net6.0\System.Web.WebPages.Razor.dll
 D:\.net\DummyApp\DummyApp\bin\Debug\net6.0\System.Web.WebPages.dll
 D:\.net\DummyApp\DummyApp\bin\Debug\net6.0\Microsoft.Web.Infrastructure.dll
+D:\.net\DummyApp\DummyApp\bin\Debug\net6.0\Dapper.dll

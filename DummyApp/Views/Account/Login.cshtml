@@ -5,6 +5,7 @@
         <div class="row d-flex justify-content-center align-items-center h-100">
             <partial name="_Loginpartial.cshtml" />
             <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+               
                 <form method="POST" asp-action="Login" asp-controller="Account">
                     <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
                         <p class="lead fw-normal mb-0 me-3">Sign in with</p>
@@ -26,11 +27,11 @@
                     </div>
 
                     <!-- error msg-->
-                   <span class="text-danger">@TempData["Error"]</span>
+                    <span class="text-danger">@TempData["Error"]</span>
 
                     <!-- Email input -->
                     <div class="form-outline mb-4 mt-2">
-                        <input type="email" id="form3Example3" class="form-control form-control-lg" 
+                        <input type="email" id="form3Example3" class="form-control form-control-lg"
                                asp-for="Email"
                                placeholder="Enter a valid email address" />
                         <label class="form-label">Email address</label>
@@ -49,9 +50,9 @@
                         @*<div class="form-check mb-0">
                             <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3" />
                             <label class="form-check-label">
-                                Remember me
+                            Remember me
                             </label>
-                        </div>*@
+                            </div>*@
                         <a asp-action="ForgotPassword" asp-controller="Account" class="text-body">Forgot password?</a>
                     </div>
 
@@ -66,7 +67,7 @@
                                class="link-danger">Register</a>
                         </p>
                     </div>
-                    
+
                 </form>
             </div>
         </div>

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "ajBuR+vbZFa/LG5+LxDYOkrU02H6PEDzqPsvWT4iH7E=",
+  "Hash": "85JFZ51PnbEWcGGvpB6YCfZlgyGnmi24MWa+enVdyH8=",
   "Source": "DummyApp",
   "BasePath": "_content/DummyApp",
   "Mode": "Default",
@@ -66,6 +66,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\Account.css"
+    },
+    {
+      "Identity": "D:\\.net\\DummyApp\\DummyApp\\wwwroot\\css\\CRUD.css",
+      "SourceId": "DummyApp",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\.net\\DummyApp\\DummyApp\\wwwroot\\",
+      "BasePath": "_content/DummyApp",
+      "RelativePath": "css/CRUD.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\CRUD.css"
     },
     {
       "Identity": "D:\\.net\\DummyApp\\DummyApp\\wwwroot\\css\\site.css",

@@ -1,13 +1,32 @@
 ﻿// Loader
-//document.onreadystatechange = function () {
-//    if (document.readyState !== "complete") {
-//        document.querySelector("body").style.visibility = "hidden";
-//        document.querySelector("#loader").style.visibility = "visible";
-//    } else {
-//        document.querySelector("#loader").style.display = "none";
-//        document.querySelector("body").style.visibility = "visible";
-//    }
-//};
+document.onreadystatechange = function () {
+    if (document.readyState !== "complete") {
+        document.querySelector("body").style.visibility = "hidden";
+        document.querySelector("#loader").style.visibility = "visible";
+    } else {
+        document.querySelector("#loader").style.display = "none";
+        document.querySelector("body").style.visibility = "visible";
+    }
+};
+
+
+(() => {
+    'use strict';
+
+
+    const forms = document.querySelectorAll('.needs-validation');
+
+
+    Array.prototype.slice.call(forms).forEach((form) => {
+        form.addEventListener('submit', (event) => {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+})();
 
 //AddEmployeeForm validations
 $(document).ready(function () {

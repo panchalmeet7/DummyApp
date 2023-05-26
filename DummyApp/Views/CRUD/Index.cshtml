@@ -5,6 +5,7 @@
 <partial name="_Navbarpartial.cshtml" />
 <!-- Navbar -->
 
+
 <div class="container my-5">
     <!---- Add Button ---->
     <div class="mb-4" style="text-align: right;">
@@ -150,7 +151,7 @@
                 </tr>
                 <!---- Edit data Modal ---->
 
-                <form id="EditEmployeeForm">
+                <form id="EditEmployeeForm" class="needs-validation" >
                     <div class="modal fade" id="EditEmployeeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog  modal-dialog-centered">
                             <div class="modal-content">
@@ -163,13 +164,13 @@
                                 <div class="row mb-4">
                                         <div class="col">
                                             <div class="form-outline">
-                                                <input type="text" id="efirstname" name="efirstname" class="form-control" />
+                                                <input type="text" id="efirstname" name="efirstname" class="form-control" required />
                                                 <label class="form-label" for="efirstname">First name</label>
                                             </div>
                                         </div>
                                         <div class="col">
                                             <div class="form-outline">
-                                                <input type="text" id="elastname" name="elastname" class="form-control" />
+                                                <input type="text" id="elastname" name="elastname" class="form-control" required />
                                                 <label class="form-label" for="elastname">Last name</label>
                                             </div>
                                         </div>
@@ -180,30 +181,30 @@
 
 
                                     <div class="form-outline mb-4">
-                                        <input type="email" id="eemail" name="eemail" class="form-control" />
+                                        <input type="email" id="eemail" name="eemail" class="form-control" required />
                                         <label class="form-label" for="eemail">Email Address</label>
                                     </div>
 
 
                                     <div class="form-outline mb-4">
-                                        <input type="text" id="erole" name="erole" class="form-control" />
+                                        <input type="text" id="erole" name="erole" class="form-control" required />
                                         <label class="form-label" for="erole">Role</label>
                                     </div>
 
 
                                     <div class="form-outline mb-4">
-                                        <input type="text" id="eposition" name="eposition" class="form-control" />
+                                        <input type="text" id="eposition" name="eposition" class="form-control" required />
                                         <label class="form-label" for="eposition">Position</label>
                                     </div>
 
 
                                     <div class="form-outline mb-4">
-                                        <input type="text" id="edepartment" name="edepartment" class="form-control" />
+                                        <input type="text" id="edepartment" name="edepartment" class="form-control" required />
                                         <label class="form-label" for="edepartment">Department</label>
                                     </div>
 
 
-                                    <select class="form-select" id="estatus" name="estatus" aria-label="Default select example">
+                                    <select class="form-select" id="estatus" name="estatus" aria-label="Default select example" required>
                                         <option selected>select status</option>
                                         <option value="ACTIVE">Active</option>
                                         <option value="ONBOARDING">Onboarding</option>
@@ -227,3 +228,5 @@
 </div>
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+

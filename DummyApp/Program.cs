@@ -1,6 +1,7 @@
 using DummyApp.Entities.Data;
 using DummyApp.Repository.Interface;
 using DummyApp.Repository.Repository;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,13 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<DummyAppContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Ci")));
 builder.Services.AddScoped<IEmailRepository, EmailRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddSession();
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(cokkie =>
+{
+    cokkie.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+    cokkie.LoginPath = "/Account/Login";
+    cokkie.AccessDeniedPath = "/Account/Login";
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -24,7 +32,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseSession();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

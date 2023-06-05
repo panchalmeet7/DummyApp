@@ -9,25 +9,6 @@ document.onreadystatechange = function () {
     }
 };
 
-
-(() => {
-    'use strict';
-
-
-    const forms = document.querySelectorAll('.needs-validation');
-
-
-    Array.prototype.slice.call(forms).forEach((form) => {
-        form.addEventListener('submit', (event) => {
-            if (!form.checkValidity()) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-            form.classList.add('was-validated');
-        }, false);
-    });
-})();
-
 //AddEmployeeForm validations
 $(document).ready(function () {
     $("#AddEmployeeForm").validate({
@@ -88,6 +69,8 @@ function AddEmployee() {
             },
             success: function (data) {
                 console.log(data);
+                debugger;
+                /*$("#EmployeeTablediv").html(data);*/
                 $("#SaveChangesBtn").text('Save');
                 $('#SaveChangesBtn').attr("disabled", false);
                 toastr.success('Data Added Successfully', 'Success', { timeOut: 1000 });
@@ -136,6 +119,7 @@ function UpdateEmployeeData() {
 
         success: function (data) {
             console.log(data);
+            //$("#EmployeeTablediv").html(data);
             $('#UpdateChangesBtn').text("Updated"); // changing the btn text after ajax success
             $('#UpdateChangesBtn').attr("disabled", false); // enabling the btn
             $('#EditEmployeeModal').modal('hide'); // hidding the modal

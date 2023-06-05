@@ -2,6 +2,7 @@
 using DummyApp.Entities.Data;
 using DummyApp.Entities.Models;
 using DummyApp.Entities.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ using System.Text;
 
 namespace DummyApp.Controllers
 {
+    [Authorize]
     public class CRUDController : Controller
     {
         private readonly DummyAppContext _dummyAppContext;
@@ -22,29 +24,18 @@ namespace DummyApp.Controllers
             _dummyAppContext = dummyAppContext;
         }
 
-        /// <returns> All the records from Employee Table </returns>
+
+        #region Getting The Data 
         public IActionResult Index()
         {
-            //create or alter procedure sp_GetAllEmolyeeData
-            //as
-            //begin
-            //select* from Employee where deleted_at is NULL
-            //end
-
             var GetAllEmployeeData = _dummyAppContext.Employees.FromSqlRaw("sp_GetAllEmolyeeData").ToList();
 
             return View(GetAllEmployeeData);
         }
+        #endregion
 
-        /// <param name="firstname"></param>
-        /// <param name="lastname"></param>
-        /// <param name="email"></param>
-        /// <param name="role"></param>
-        /// <param name="position"></param>
-        /// <param name="department"></param>
-        /// <param name="status"></param>
-        /// <returns> All the Index View With all the dara that is inserted </returns>
-        public IActionResult AddEmployeeData(string firstname, string lastname, string email, string role, string position, string department, string status)
+        #region Add Employee Data
+        public IActionResult AddEmployeeData(string firstname, string lastname, string email, string role, string position, string department, string status, Employee employee)
         {
             //Mapping Stored Procedure Parameter with Dapper
 
@@ -65,59 +56,41 @@ namespace DummyApp.Controllers
                     connection.Open();
                     var exexute = connection.Execute(storedprocedure, parameters, commandType: CommandType.StoredProcedure);
                     connection.Close();
+
+
+                    //using (SqlConnection con = new SqlConnection(connectionString))
+                    //{
+                    //    using (SqlCommand cmd = new SqlCommand("sp_AddEmpoyeeData ", con))  // passing required params
+                    //    {
+                    //        cmd.CommandType = CommandType.StoredProcedure;
+                    //        cmd.Parameters.Add("@Employee_FirstName", SqlDbType.VarChar).Value = firstname; // Adding Values into params
+                    //        cmd.Parameters.Add("@Employee_LastName", SqlDbType.VarChar).Value = lastname;
+                    //        cmd.Parameters.Add("@Employee_Email", SqlDbType.VarChar).Value = email;
+                    //        cmd.Parameters.Add("@Employee_Role", SqlDbType.VarChar).Value = role;
+                    //        cmd.Parameters.Add("@Employee_Department", SqlDbType.VarChar).Value = department;
+                    //        cmd.Parameters.Add("@Status", SqlDbType.VarChar).Value = status;
+                    //        cmd.Parameters.Add("@Position", SqlDbType.VarChar).Value = position;
+                    //        cmd.Parameters.Add("@created_at", SqlDbType.DateTime).Value = DateTime.Now;
+
+                    //        con.Open();  // opening a connection
+                    //        cmd.ExecuteNonQuery(); // executing the query with given params
+                    //        con.Close();
+                    //    }
+                    //}
+
                 }
-
-                //    //create or alter procedure sp_AddEmpoyeeData
-                //    //(
-                //    //    @Employee_FirstName varchar(50),
-                //    //    @Employee_LastName varchar(50),
-                //    //    @Employee_Email varchar(50),
-                //    //    @Employee_Role varchar(50),
-                //    //    @Employee_Department varchar(50),
-                //    //    @Status varchar(50),
-                //    //    @Position varchar(50),
-                //    //    @created_at datetime
-                //    //)
-                //    //as
-                //    //begin
-                //    //insert into[dbo].[Employee]
-                //    //(Employee_FirstName, Employee_LastName, Employee_Email, Employee_Role, Employee_Department, Status, Position, created_at)
-                //    //values
-                //    //(@Employee_FirstName, @Employee_LastName, @Employee_Email, @Employee_Role, @Employee_Department, @Status, @Position, @created_at)
-
-                //    //end
-
-                //using (SqlConnection con = new SqlConnection(connectionString))
-                //{
-                //    using (SqlCommand cmd = new SqlCommand("sp_AddEmpoyeeData ", con))  // passing required params
-                //    {
-                //        cmd.CommandType = CommandType.StoredProcedure;
-                //        cmd.Parameters.Add("@Employee_FirstName", SqlDbType.VarChar).Value = firstname; // Adding Values into params
-                //        cmd.Parameters.Add("@Employee_LastName", SqlDbType.VarChar).Value = lastname;
-                //        cmd.Parameters.Add("@Employee_Email", SqlDbType.VarChar).Value = email;
-                //        cmd.Parameters.Add("@Employee_Role", SqlDbType.VarChar).Value = role;
-                //        cmd.Parameters.Add("@Employee_Department", SqlDbType.VarChar).Value = department;
-                //        cmd.Parameters.Add("@Status", SqlDbType.VarChar).Value = status;
-                //        cmd.Parameters.Add("@Position", SqlDbType.VarChar).Value = position;
-                //        cmd.Parameters.Add("@created_at", SqlDbType.DateTime).Value = DateTime.Now;
-
-                //        con.Open();  // opening a connection
-                //        cmd.ExecuteNonQuery(); // executing the query with given params
-                //        con.Close();
-                //    }
-                //}
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
                 Console.Read();
             }
-            return RedirectToAction("Index", "CRUD");
+            //return PartialView("_EmployeeTable", employee);
+            return RedirectToAction("Index", "Account");
         }
+        #endregion
 
-
-        /// <param name="EmployeeId"></param>
-        /// <returns> Json Result of Employee Data </returns>
+        #region Get Single Employee Data
         [HttpGet]
         public JsonResult GetSingleEmployeeRecord(int EmployeeId)
         {
@@ -125,26 +98,6 @@ namespace DummyApp.Controllers
             List<Employee> employees = new List<Employee>();
             try
             {
-                //create or alter procedure sp_GetSingleEmolyee
-                //(@Employee_id int)
-                //as
-                //begin
-                // SELECT[Employee_id]
-                //      ,[Employee_FirstName]
-                //      ,[Employee_LastName]
-                //      ,[Employee_Email]
-                //      ,[Employee_Role]
-                //      ,[Employee_Department]
-                //      ,[Status]
-                //      ,[Position]
-                //      ,[created_at]
-                //      ,[updated_at]
-                //      ,[deleted_at]
-                //                FROM[dbo].[Employee]
-                //  WHERE Employee_id = @Employee_id
-                //  end
-                //GO
-
                 using (SqlConnection con = new SqlConnection(connectionString))  // Establishing connection with database 
                 {
                     using (SqlCommand cmd = new SqlCommand("sp_GetSingleEmolyee", con))
@@ -199,38 +152,12 @@ namespace DummyApp.Controllers
 
             //var Employee = _dummyAppContext.Employees.Where(emp => emp.EmployeeId == EmployeeId).FirstOrDefault();
         }
+        #endregion
 
+        #region Update Employee Data
         [HttpPost]
         public IActionResult UpdateEmployeeData(int empid, string firstname, string lastname, string email, string role, string position, string department, string status)
         {
-            //create or alter procedure sp_UpdateEmpoyeeData
-            //(
-            //    @Employee_id int,
-            //    @Employee_FirstName varchar(50),
-            //    @Employee_LastName varchar(50),
-            //    @Employee_Email varchar(50),
-            //    @Employee_Role varchar(50),
-            //    @Employee_Department varchar(50),
-            //    @Status varchar(50),
-            //    @Position varchar(50),
-            //    @updated_at datetime
-            //)
-            //as
-            //begin
-            //UPDATE[dbo].[Employee]
-            //SET
-            //Employee_FirstName = @Employee_FirstName,
-            //Employee_LastName = @Employee_LastName,
-            //Employee_Email = @Employee_Email,
-            //Employee_Role = @Employee_Role,
-            //Employee_Department = @Employee_Department,
-            //Status = @Status,
-            //Position = @Position,
-            //updated_at = @updated_at
-
-            //where Employee_id = @Employee_id;
-            //end
-
             try
             {
                 var parameters = new DynamicParameters();
@@ -280,26 +207,15 @@ namespace DummyApp.Controllers
             }
             return RedirectToAction("Index", "CRUD");
         }
+        #endregion
 
-        /// <summary>
-        /// Soft Delete into Employee Data
-        /// </summary>
-        /// <param name="EmployeeId"></param>
-        /// <returns>View</returns>
+        #region Delete Employee Data
         public IActionResult DeleteEmployeeData(int EmployeeId)
         {
             if (EmployeeId != 0)
             {
                 try
                 {
-                    //create or alter procedure sp_deleteEmployee
-                    //@deleted_at datetime,
-                    //@Employee_id int
-                    //as
-                    //begin
-                    //update Employee
-                    //SET deleted_at = @deleted_at where Employee_id = @Employee_id;
-                    //END
                     using (SqlConnection con = new SqlConnection(connectionString))
                     {
                         using (SqlCommand cmd = new SqlCommand("sp_deleteEmployee", con))
@@ -323,8 +239,9 @@ namespace DummyApp.Controllers
             {
                 return View("Index", new { message = "toaster msg" });
             }
-
             return RedirectToAction("Index", "CRUD");
+            //return PartialView("_EmployeeTable");
         }
+        #endregion
     }
 }

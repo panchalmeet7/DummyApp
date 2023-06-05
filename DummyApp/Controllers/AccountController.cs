@@ -12,6 +12,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DummyApp.Controllers
 {
@@ -37,14 +38,12 @@ namespace DummyApp.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("");
-            }
             return View();
         }
         [HttpPost]
-        public IActionResult Login(LoginViewModel LoginViewModel, User user)
+        [AllowAnonymous]
+        #region-- > Login Using SP and Cokkie Authentication
+        public async Task<ActionResult> Login(LoginViewModel LoginViewModel, User user)
         {
             try
             {
@@ -52,33 +51,25 @@ namespace DummyApp.Controllers
 
                 using (SqlConnection con = new SqlConnection(connectionString))  // establishing connection with database 
                 {
-                    //<!-------- Login Stored procedure -------->
-
-                    //  CREATE or ALTER PROCEDURE sp_login_user
-                    //  (
-                    //  @Email VARCHAR(150),
-                    //  @Password varchar(250)
-                    //  )
-                    //  as
-                    //  declare @status int
-                    //  if exists(select * from dbo.[User] where Email = @Email and Password = @Password)
-                    //        set @status = 1
-                    //  else
-                    //        set @status = 0
-                    //  select @status
-
+                    
                     using (SqlCommand cmd = new SqlCommand("sp_login_user", con))
                     {
-                        con.Open();  // opening a connection
-                        cmd.CommandType = CommandType.StoredProcedure;
+                        await con.OpenAsync();  // opening a connection
+                        cmd.CommandType = CommandType.StoredProcedure; 
                         cmd.Parameters.Add("@Email", SqlDbType.VarChar).Value = LoginViewModel.Email; // Adding Values into params
                         cmd.Parameters.Add("@Password", SqlDbType.VarChar).Value = LoginViewModel.Password; // Adding Values into params
                         int status;
-                        status = Convert.ToInt16(cmd.ExecuteScalar()); // ExecuteScalar method is used to retrieve a single value from DB
+                        status =  Convert.ToInt16(cmd.ExecuteScalar()); // ExecuteScalar method is used to retrieve a single value from DB
                         if (status == 1)
                         {
+                            var userFirstName =  _dummyAppContext.Users.Where(data => data.Email == LoginViewModel.Email).Select(user => user.FirstName).FirstOrDefault();
+                            var identity = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, userFirstName) }, CookieAuthenticationDefaults.AuthenticationScheme);
+                            var principal = new ClaimsPrincipal(identity);
+                            HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+                            HttpContext.Session.SetString("Email", LoginViewModel.Email);
+                            ViewBag.EmailID = HttpContext.Session.GetString("Email");
                             return RedirectToAction("Index", "CRUD");
-                        }
+                        } 
                         else
                         {
                             TempData["Error"] = "Invalid User Credentials!!";
@@ -96,7 +87,7 @@ namespace DummyApp.Controllers
                 throw;
             }
 
-            //Login without sp -->
+            // <------ Previous Approch ------>
 
             //var users = _dummyAppContext.Users.Where(u => u.Email == loginmodel.Email).FirstOrDefault();
             //if (users.Email == loginmodel.Email && users.Password == loginmodel.Password)
@@ -106,7 +97,9 @@ namespace DummyApp.Controllers
             //}
             //TempData["Error"] = "Invalid User Credentials!!";
             //return RedirectToAction("Login", "Account");
+
         }
+        #endregion
 
         [HttpGet]
         public IActionResult Registration()
@@ -172,9 +165,9 @@ namespace DummyApp.Controllers
                 byte[] time = BitConverter.GetBytes(DateTime.UtcNow.ToBinary());
                 byte[] key = Guid.NewGuid().ToByteArray();
                 string token = Convert.ToBase64String(time.Concat(key).ToArray());
-                var lnkHref = "https://localhost:7260/Account/ResetPassword?token=" + token + "&email=" + emailadd;
+                var linkHref = "https://localhost:7260/Account/ResetPassword?token=" + token + "&email=" + emailadd;
                 string subject = "Please Reset your password";
-                string body = "Link to reset your password :" + " " + lnkHref;
+                string body = "Link to Reset your password :" + " " + linkHref;
                 _emailRepository.SendEmail(emailadd, subject, body);
             }
             else
@@ -184,6 +177,18 @@ namespace DummyApp.Controllers
             }
           
             return View();
+        }
+
+        public IActionResult LogOut()
+        {
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            var storedCookie = Request.Cookies.Keys;
+            foreach (var cookie in storedCookie)
+            {
+                Response.Cookies.Delete(cookie);
+                HttpContext.Session.Clear();
+            }
+            return RedirectToAction("Login", "Account");
         }
     }
 }

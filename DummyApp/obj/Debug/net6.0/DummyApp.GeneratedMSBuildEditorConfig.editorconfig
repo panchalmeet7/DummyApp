@@ -39,6 +39,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ1JVRFxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/.net/DummyApp/DummyApp/Views/CRUD/_EmployeeTable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ1JVRFxfRW1wbG95ZWVUYWJsZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/.net/DummyApp/DummyApp/Views/CRUD/_Navbarpartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ1JVRFxfTmF2YmFycGFydGlhbC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 

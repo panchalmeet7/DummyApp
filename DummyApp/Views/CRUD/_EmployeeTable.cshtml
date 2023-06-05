@@ -1,0 +1,143 @@
+﻿<table class="table align-middle mb-0 bg-white" id="tblEMploayeelist">
+    <thead class="bg-light">
+        <tr>
+            <th>Name</th>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Position</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var employees in Model)
+        {
+            var image_link = "https://mdbootstrap.com/img/new/avatars/" + @employees.EmployeeId + ".jpg";
+            <tr>
+                <td>
+                    <div class="d-flex align-items-center">
+                        <img src="@image_link"
+                         class="rounded-circle"
+                         alt=""
+                         style="width: 45px; height: 45px" />
+                        <div class="ms-3">
+                            <p class="fw-bold mb-1">@employees.EmployeeFirstName @employees.EmployeeLastName</p>
+                            <p class="text-muted mb-0">@employees.EmployeeEmail</p>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <p class="fw-normal mb-1">@employees.EmployeeRole</p>
+                    <p class="text-muted mb-0">@employees.EmployeeDepartment </p>
+                </td>
+                <td>
+                    @if (@employees.Status == "ACTIVE")
+                    {
+                        <span class="badge badge-success rounded-pill d-inline p-2">@employees.Status</span>
+                    }
+                    else if (@employees.Status == "ONBOARDING")
+                    {
+                        <span class="badge badge-warning rounded-pill d-inline p-2">@employees.Status</span>
+                    }
+                    else if (@employees.Status == "AWAITING")
+                    {
+                        <span class="badge badge-danger rounded-pill d-inline p-2">@employees.Status</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-light rounded-pill d-inline p-2">@employees.Status</span>
+                    }
+                </td>
+                <td>@employees.Position</td>
+                <td>
+                    <button type="button"
+                        class="btn btn-link btn-rounded btn-sm fw-bold"
+                        data-mdb-ripple-color="blue"
+                        data-mdb-toggle="modal" data-mdb-target="#EditEmployeeModal"
+                        onclick="RetriveEmployeeData(@employees.EmployeeId)">
+                        Edit
+                    </button>
+                    <button type="button"
+                        class="btn btn-link btn-rounded btn-sm fw-bold"
+                        data-mdb-ripple-color="red"
+                        style="color: red;"
+                        onclick="DeleteEmployeeData(@employees.EmployeeId)">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+            <!---- Edit data Modal ---->
+
+            <form id="EditEmployeeForm" class="needs-validation">
+                <div class="modal fade" id="EditEmployeeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog  modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Update Details</h5>
+                                <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- 2 column grid layout with text inputs for the first and last names -->
+                            <div class="row mb-4">
+                                    <div class="col">
+                                        <div class="form-outline">
+                                            <input type="text" id="efirstname" name="efirstname" class="form-control" required />
+                                            <label class="form-label" for="efirstname">First name</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-outline">
+                                            <input type="text" id="elastname" name="elastname" class="form-control" required />
+                                            <label class="form-label" for="elastname">Last name</label>
+                                        </div>
+                                    </div>
+
+                                    <input type="hidden" id="hidempid" name="elastname" class="form-control" />
+
+                                </div>
+
+
+                                <div class="form-outline mb-4">
+                                    <input type="email" id="eemail" name="eemail" class="form-control" required />
+                                    <label class="form-label" for="eemail">Email Address</label>
+                                </div>
+
+
+                                <div class="form-outline mb-4">
+                                    <input type="text" id="erole" name="erole" class="form-control" required />
+                                    <label class="form-label" for="erole">Role</label>
+                                </div>
+
+
+                                <div class="form-outline mb-4">
+                                    <input type="text" id="eposition" name="eposition" class="form-control" required />
+                                    <label class="form-label" for="eposition">Position</label>
+                                </div>
+
+
+                                <div class="form-outline mb-4">
+                                    <input type="text" id="edepartment" name="edepartment" class="form-control" required />
+                                    <label class="form-label" for="edepartment">Department</label>
+                                </div>
+
+
+                                <select class="form-select" id="estatus" name="estatus" aria-label="Default select example" required>
+                                    <option selected>select status</option>
+                                    <option value="ACTIVE">Active</option>
+                                    <option value="ONBOARDING">Onboarding</option>
+                                    <option value="AWAITING">Awaiting</option>
+                                </select>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+                                <button type="submit" id="UpdateChangesBtn" onclick="UpdateEmployeeData()" class="btn btn-primary">Update changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <!---- Edit Data Modal End ---->
+        }
+    </tbody>
+</table>

@@ -2,6 +2,8 @@
 using DummyApp.Entities.Data;
 using DummyApp.Entities.Models;
 using DummyApp.Entities.ViewModels;
+using DummyApp.Repository.Interface;
+using DummyApp.Repository.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -18,12 +20,13 @@ namespace DummyApp.Controllers
     public class CRUDController : Controller
     {
         private readonly DummyAppContext _dummyAppContext;
+        private readonly CRUDRepository _crudRepository;
         private string connectionString = "Data Source=PCT38\\SQL2019;Initial Catalog=DummyApp;User Id=sa;Password=Tatva@123;TrustServerCertificate=True;Integrated Security=True";
-        public CRUDController(DummyAppContext dummyAppContext)
+        public CRUDController(DummyAppContext dummyAppContext, ICRUDRepository crudRepository)
         {
             _dummyAppContext = dummyAppContext;
+            _crudRepository = (CRUDRepository?)crudRepository;
         }
-
 
         #region Getting The Data 
         public IActionResult Index()
@@ -37,56 +40,38 @@ namespace DummyApp.Controllers
         #region Add Employee Data
         public IActionResult AddEmployeeData(string firstname, string lastname, string email, string role, string position, string department, string status, Employee employee)
         {
-            //Mapping Stored Procedure Parameter with Dapper
+            _crudRepository.AddNewEmployee(firstname, lastname, email, role, position, department, status, employee);
 
-            try
+            return RedirectToAction("Index", "CRUD");
+        }
+        #endregion
+
+        #region Update Employee Data
+        [HttpPost]
+        public IActionResult UpdateEmployeeData(int empid, string firstname, string lastname, string email, string role, string position, string department, string status)
+        {
+            if (empid != 0)
             {
-                var parameters = new DynamicParameters();
-                parameters.Add("@Employee_FirstName", firstname);
-                parameters.Add("@Employee_LastName", lastname);
-                parameters.Add("@Employee_Email", email);
-                parameters.Add("@Employee_Role", role);
-                parameters.Add("@Position", position);
-                parameters.Add("@Employee_Department", department);
-                parameters.Add("@Status", status);
-                parameters.Add("@created_at", DateTime.Now);
-                var storedprocedure = "sp_AddEmpoyeeData";
-                using (var connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-                    var exexute = connection.Execute(storedprocedure, parameters, commandType: CommandType.StoredProcedure);
-                    connection.Close();
-
-
-                    //using (SqlConnection con = new SqlConnection(connectionString))
-                    //{
-                    //    using (SqlCommand cmd = new SqlCommand("sp_AddEmpoyeeData ", con))  // passing required params
-                    //    {
-                    //        cmd.CommandType = CommandType.StoredProcedure;
-                    //        cmd.Parameters.Add("@Employee_FirstName", SqlDbType.VarChar).Value = firstname; // Adding Values into params
-                    //        cmd.Parameters.Add("@Employee_LastName", SqlDbType.VarChar).Value = lastname;
-                    //        cmd.Parameters.Add("@Employee_Email", SqlDbType.VarChar).Value = email;
-                    //        cmd.Parameters.Add("@Employee_Role", SqlDbType.VarChar).Value = role;
-                    //        cmd.Parameters.Add("@Employee_Department", SqlDbType.VarChar).Value = department;
-                    //        cmd.Parameters.Add("@Status", SqlDbType.VarChar).Value = status;
-                    //        cmd.Parameters.Add("@Position", SqlDbType.VarChar).Value = position;
-                    //        cmd.Parameters.Add("@created_at", SqlDbType.DateTime).Value = DateTime.Now;
-
-                    //        con.Open();  // opening a connection
-                    //        cmd.ExecuteNonQuery(); // executing the query with given params
-                    //        con.Close();
-                    //    }
-                    //}
-
-                }
+                _crudRepository.UpdateEmployeeData(empid, firstname, lastname, email, role, position, department, status);
             }
-            catch (Exception ex)
+
+            return RedirectToAction("Index", "CRUD");
+        }
+        #endregion
+
+        #region Delete Employee Data
+        public IActionResult DeleteEmployeeData(int EmployeeId)
+        {
+            if (EmployeeId != 0)
             {
-                Console.WriteLine(ex);
-                Console.Read();
+                _crudRepository.DeleteEmployeeData(EmployeeId);
             }
-            //return PartialView("_EmployeeTable", employee);
-            return RedirectToAction("Index", "Account");
+            else
+            {
+                return View("Index", new { message = "toaster msg" });
+            }
+            return RedirectToAction("Index", "CRUD");
+            //return PartialView("_EmployeeTable");
         }
         #endregion
 
@@ -151,96 +136,6 @@ namespace DummyApp.Controllers
             //<--------------- Previous Approch --------------------->
 
             //var Employee = _dummyAppContext.Employees.Where(emp => emp.EmployeeId == EmployeeId).FirstOrDefault();
-        }
-        #endregion
-
-        #region Update Employee Data
-        [HttpPost]
-        public IActionResult UpdateEmployeeData(int empid, string firstname, string lastname, string email, string role, string position, string department, string status)
-        {
-            try
-            {
-                var parameters = new DynamicParameters();
-                parameters.Add("@Employee_id", empid);
-                parameters.Add("@Employee_FirstName", firstname);
-                parameters.Add("@Employee_LastName", lastname);
-                parameters.Add("@Employee_Email", email);
-                parameters.Add("@Employee_Role", role);
-                parameters.Add("@Position", position);
-                parameters.Add("@Employee_Department", department);
-                parameters.Add("@Status", status);
-                parameters.Add("@updated_at", DateTime.Now);
-                var storedprocedure = "sp_UpdateEmpoyeeData";
-                using (var connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-                    var exexute = connection.Execute(storedprocedure, parameters, commandType: CommandType.StoredProcedure);
-                    connection.Close();
-                }
-
-                //using (SqlConnection con = new SqlConnection(connectionString))
-                //{
-                //    using (SqlCommand cmd = new SqlCommand("sp_UpdateEmpoyeeData", con))  // passing required params
-                //    {
-                //        cmd.CommandType = CommandType.StoredProcedure;
-                //        cmd.Parameters.Add("@Employee_id", SqlDbType.Int).Value = empid; // Adding Values into params
-                //        cmd.Parameters.Add("@Employee_FirstName", SqlDbType.VarChar).Value = firstname;
-                //        cmd.Parameters.Add("@Employee_LastName", SqlDbType.VarChar).Value = lastname;
-                //        cmd.Parameters.Add("@Employee_Email", SqlDbType.VarChar).Value = email;
-                //        cmd.Parameters.Add("@Employee_Role", SqlDbType.VarChar).Value = role;
-                //        cmd.Parameters.Add("@Employee_Department", SqlDbType.VarChar).Value = department;
-                //        cmd.Parameters.Add("@Status", SqlDbType.VarChar).Value = status;
-                //        cmd.Parameters.Add("@Position", SqlDbType.VarChar).Value = position;
-                //        cmd.Parameters.Add("@updated_at", SqlDbType.DateTime).Value = DateTime.Now;
-
-                //        con.Open();  // opening a connection
-                //        cmd.ExecuteNonQuery(); // executing the query with given params
-                //        con.Close();
-                //    }
-                //}
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                Console.Read();
-            }
-            return RedirectToAction("Index", "CRUD");
-        }
-        #endregion
-
-        #region Delete Employee Data
-        public IActionResult DeleteEmployeeData(int EmployeeId)
-        {
-            if (EmployeeId != 0)
-            {
-                try
-                {
-                    using (SqlConnection con = new SqlConnection(connectionString))
-                    {
-                        using (SqlCommand cmd = new SqlCommand("sp_deleteEmployee", con))
-                        {
-                            cmd.CommandType = CommandType.StoredProcedure;
-                            cmd.Parameters.Add("@deleted_at", SqlDbType.DateTime).Value = DateTime.Now;
-                            cmd.Parameters.Add("@Employee_id", SqlDbType.Int).Value = EmployeeId;
-                            con.Open();  // opening a connection
-                            cmd.ExecuteNonQuery(); // executing the query with given params
-                            con.Close();
-                        };
-                    };
-                }
-                catch (Exception)
-                {
-                    Console.WriteLine("na thyu");
-                    Console.Read();
-                }
-            }
-            else
-            {
-                return View("Index", new { message = "toaster msg" });
-            }
-            return RedirectToAction("Index", "CRUD");
-            //return PartialView("_EmployeeTable");
         }
         #endregion
     }

@@ -10,7 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<DummyAppContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Ci")));
 builder.Services.AddScoped<IEmailRepository, EmailRepository>();
+builder.Services.AddScoped<ICRUDRepository, CRUDRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<IDapperRepository, DapperRepository>();
 builder.Services.AddSession();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(cokkie =>
 {

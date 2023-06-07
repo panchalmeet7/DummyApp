@@ -51,25 +51,25 @@ namespace DummyApp.Controllers
 
                 using (SqlConnection con = new SqlConnection(connectionString))  // establishing connection with database 
                 {
-                    
+
                     using (SqlCommand cmd = new SqlCommand("sp_login_user", con))
                     {
                         await con.OpenAsync();  // opening a connection
-                        cmd.CommandType = CommandType.StoredProcedure; 
+                        cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.Add("@Email", SqlDbType.VarChar).Value = LoginViewModel.Email; // Adding Values into params
                         cmd.Parameters.Add("@Password", SqlDbType.VarChar).Value = LoginViewModel.Password; // Adding Values into params
                         int status;
-                        status =  Convert.ToInt16(cmd.ExecuteScalar()); // ExecuteScalar method is used to retrieve a single value from DB
+                        status = Convert.ToInt16(cmd.ExecuteScalar()); // ExecuteScalar method is used to retrieve a single value from DB
                         if (status == 1)
                         {
-                            var userFirstName =  _dummyAppContext.Users.Where(data => data.Email == LoginViewModel.Email).Select(user => user.FirstName).FirstOrDefault();
+                            var userFirstName = _dummyAppContext.Users.Where(data => data.Email == LoginViewModel.Email).Select(user => user.FirstName).FirstOrDefault();
                             var identity = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, userFirstName) }, CookieAuthenticationDefaults.AuthenticationScheme);
                             var principal = new ClaimsPrincipal(identity);
                             HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
                             HttpContext.Session.SetString("Email", LoginViewModel.Email);
                             ViewBag.EmailID = HttpContext.Session.GetString("Email");
                             return RedirectToAction("Index", "CRUD");
-                        } 
+                        }
                         else
                         {
                             TempData["Error"] = "Invalid User Credentials!!";
@@ -175,7 +175,7 @@ namespace DummyApp.Controllers
                 TempData["Error"] = "Sorry for the inconvenience";
                 return View();
             }
-          
+
             return View();
         }
 
@@ -184,6 +184,8 @@ namespace DummyApp.Controllers
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             var storedCookie = Request.Cookies.Keys;
             foreach (var cookie in storedCookie)
+
+
             {
                 Response.Cookies.Delete(cookie);
                 HttpContext.Session.Clear();

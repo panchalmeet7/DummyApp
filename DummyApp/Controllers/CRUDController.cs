@@ -19,14 +19,20 @@ namespace DummyApp.Controllers
     [Authorize]
     public class CRUDController : Controller
     {
+        #region PROPERTIES
         private readonly DummyAppContext _dummyAppContext;
         private readonly CRUDRepository _crudRepository;
         private string connectionString = "Data Source=PCT38\\SQL2019;Initial Catalog=DummyApp;User Id=sa;Password=Tatva@123;TrustServerCertificate=True;Integrated Security=True";
+        #endregion
+
+        #region CONSTRUCTOR
         public CRUDController(DummyAppContext dummyAppContext, ICRUDRepository crudRepository)
         {
             _dummyAppContext = dummyAppContext;
             _crudRepository = (CRUDRepository?)crudRepository;
         }
+
+        #endregion
 
         #region Getting The Data 
         public IActionResult Index()
@@ -47,6 +53,18 @@ namespace DummyApp.Controllers
         #endregion
 
         #region Update Employee Data
+        /// <summary>
+        /// This method updates the existing employee data by id
+        /// </summary>
+        /// <param name="empid"></param>
+        /// <param name="firstname"></param>
+        /// <param name="lastname"></param>
+        /// <param name="email"></param>
+        /// <param name="role"></param>
+        /// <param name="position"></param>
+        /// <param name="department"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult UpdateEmployeeData(int empid, string firstname, string lastname, string email, string role, string position, string department, string status)
         {
@@ -60,6 +78,11 @@ namespace DummyApp.Controllers
         #endregion
 
         #region Delete Employee Data
+        /// <summary>
+        /// This method deletes the empolyee data by id
+        /// </summary>
+        /// <param name="EmployeeId"></param>
+        /// <returns></returns>
         public IActionResult DeleteEmployeeData(int EmployeeId)
         {
             if (EmployeeId != 0)
@@ -76,6 +99,11 @@ namespace DummyApp.Controllers
         #endregion
 
         #region Get Single Employee Data
+        /// <summary>
+        /// this method returns json data of single employee by id
+        /// </summary>
+        /// <param name="EmployeeId"></param>
+        /// <returns></returns>
         [HttpGet]
         public JsonResult GetSingleEmployeeRecord(int EmployeeId)
         {
@@ -83,40 +111,38 @@ namespace DummyApp.Controllers
             List<Employee> employees = new List<Employee>();
             try
             {
-                using (SqlConnection con = new SqlConnection(connectionString))  // Establishing connection with database 
-                {
-                    using (SqlCommand cmd = new SqlCommand("sp_GetSingleEmolyee", con))
-                    {
-                        con.Open();  // Opening a connection
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.Add("@Employee_id", SqlDbType.Int).Value = EmployeeId; // Adding Values into params
+                var parameters = new DynamicParameters();
+                parameters.Add("@Employee_id", EmployeeId);
 
-                        var reader = cmd.ExecuteReader();
-                        if (!reader.HasRows)
-                        {
-                            jsonResult.Append("[]");
-                        }
-                        else
-                        {
-                            while (reader.Read())
-                            {
-                                Employee employee = new Employee()
-                                {
-                                    EmployeeId = (int)reader["Employee_id"],
-                                    EmployeeFirstName = (string)reader["Employee_FirstName"],
-                                    EmployeeLastName = (string)reader["Employee_LastName"],
-                                    EmployeeEmail = (string)reader["Employee_Email"],
-                                    EmployeeRole = (string)reader["Employee_Role"],
-                                    Position = (string)reader["Position"],
-                                    EmployeeDepartment = (string)reader["Employee_Department"],
-                                    Status = (string)reader["Status"],
-                                };
-                                employees.Append(employee); //Appends information to the end of the current StringBuilder
-                                employees.Add(employee);
-                            }
-                        }
-                        con.Close();
+                using (SqlConnection con = new(connectionString))  // Establishing connection with database 
+                {
+                    con.Open();  // Opening a connection
+                    var sp = "sp_GetSingleEmolyee";
+                    var reader = con.ExecuteReader(sp, parameters, commandType: CommandType.StoredProcedure);
+                    if (!reader.hasRows)
+                    {
+                        jsonResult.Append("[]");
                     }
+
+                    while (reader.Read())
+                    {
+                        Employee employee = new Employee()
+                        {
+                            EmployeeId = (int)reader["Employee_id"],
+                            EmployeeFirstName = (string)reader["Employee_FirstName"],
+                            EmployeeLastName = (string)reader["Employee_LastName"],
+                            EmployeeEmail = (string)reader["Employee_Email"],
+                            EmployeeRole = (string)reader["Employee_Role"],
+                            Position = (string)reader["Position"],
+                            EmployeeDepartment = (string)reader["Employee_Department"],
+                            Status = (string)reader["Status"],
+                        };
+                        employees.Append(employee); //Appends information to the end of the current StringBuilder
+                        employees.Add(employee);
+                    }
+
+                    con.Close();
+
                 }
 
                 return Json(new { data = employees });

@@ -30,62 +30,42 @@
                     <!-- First Name input -->
                     <div class="form-outline">
                         <input type="text" class="form-control form-control-lg" placeholder="evan" asp-for="FirstName" id="fname">
-
                         <label class="form-label">First Name</label>
-
                     </div>
-                    @Html.ValidationMessageFor(model => model.FirstName,"", new
-                {
-                @class = "text-danger"
-                })
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+
                     <!-- Last Name input -->
                     <div class="form-outline mt-4">
-                        @Html.TextBoxFor(m => m.LastName , new { @class = "form-control form-control-lg", @placeholder= "last name", @id="lname" })
+                        <input asp-for="LastName" placeholder="Last Name" class="form-control form-control-lg" id="lname" type="text" />
                         <label class="form-label">Last Name</label>
                     </div>
-                    @Html.ValidationMessageFor(model => model.LastName,"", new
-                {
-                @class = "text-danger"
-                })
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+
                     <!-- Email input -->
                     <div class="form-outline mt-4">
-                        @Html.TextBoxFor(m => m.Email , new { @class = "form-control form-control-lg", @placeholder= "abc@gmail.com", @id="email" })
+                        <input class="form-control form-control-lg" asp-for="Email" type="email" id="email" placeholder="abc@gmail.com" />
                         <label class="form-label">Email address</label>
                     </div>
-                    @Html.ValidationMessageFor(model => model.Email,"", new
-                {
-                @class = "text-danger"
-                })
+                    <span asp-validation-for="Email" class="text-danger"></span>
                     <span class="text-danger">@TempData["Error"]</span>
                     <!-- Phone Number input -->
                     <div class="form-outline mt-4">
-                        @Html.TextBoxFor(m => m.PhoneNumber , new { @class = "form-control form-control-lg", @placeholder= "6457645754", @id="phonenumber" })
+                        <input asp-for="PhoneNumber" placeholder="9428977397" type="number" class="form-control form-control-lg" id="phonenumber" />
                         <label class="form-label">Phone Number</label>
-
                     </div>
-                    @Html.ValidationMessageFor(model => model.PhoneNumber,"", new
-                {
-                @class = "text-danger"
-                })
-
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                     <!-- Password input -->
                     <div class="form-outline mt-3">
-                        @Html.TextBoxFor(m => m.Password, new { @class = "form-control", @placeholder="" , @type = "password" ,@id="txtPassword"})
+                        <input asp-for="Password" class="form-control form-control-lg" id="txtPassword" placeholder="" type="password" />
                         <label class="form-label">Password</label>
                     </div>
-                    @Html.ValidationMessageFor(model => model.Password,"", new
-                {
-                @class = "text-danger"
-                })
+                    <span asp-validation-for="Password" class="text-danger"></span>
                     <!-- Confirm Password input -->
                     <div class="form-outline mt-3">
-                        @Html.TextBoxFor(m => m.ConfirmPassword, new { @class = "form-control", @placeholder="" , @type = "password", @id="txtConfirmPassword"})
+                        <input asp-for="ConfirmPassword" type="password" class="form-control form-control-lg" placeholder="" id="txtConfirmPassword" />
                         <label class="form-label">Confirm Password</label>
                     </div>
-                    @Html.ValidationMessageFor(model => model.ConfirmPassword,"", new
-                {
-                @class = "text-danger"
-                })
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                     <div class="d-flex justify-content-between align-items-center">
                         <!-- Forgotpassword div -->
                     <div class="form-check mb-0">
@@ -154,6 +134,6 @@
         document.getElementById("phonenumber").value = "";
         document.getElementById("txtPassword").value = "";
         document.getElementById("txtConfirmPassword").value = "";
-        
+
     }
 </script>

@@ -113,7 +113,7 @@ namespace DummyApp.Controllers
 
             if (users.Email == model.Email)
             {
-                TempData["Error"] = "Oops Email already exists, Please try another Email!";
+                TempData["Error"] = "Oops Email already exists, Please try with another Email!";
             }
             else
             {

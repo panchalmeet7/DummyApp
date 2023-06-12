@@ -35,7 +35,7 @@ namespace DummyApp.Repository.Repository
             {
                 //bool status = Validation_Input_UserEmail_Twice(model);
 
-                using (SqlConnection con = new SqlConnection(connectionString))  // establishing connection with database 
+                using (SqlConnection con = new (connectionString))  // establishing connection with database 
                 {
                     //<!-------- Registration Stored procedure -------->
 
@@ -54,7 +54,7 @@ namespace DummyApp.Repository.Repository
                     //VALUES(@FirstName, @LastName, @Email, @PhoneNumber, @Password)
                     //END
 
-                    using (SqlCommand cmd = new SqlCommand("sp_user_insert", con)) // giving sp required params
+                    using (SqlCommand cmd = new ("sp_user_insert", con)) // giving sp required params
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.Add("@FirstName", SqlDbType.VarChar).Value = model.FirstName; // Adding Values into params

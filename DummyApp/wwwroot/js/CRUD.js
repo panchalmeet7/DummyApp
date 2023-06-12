@@ -150,16 +150,16 @@ function RetriveEmployeeData(EmployeeId) {
         },
         success: function (data) {
             console.log(data);
-            $.each(data.data, function (key, value) {
-                $("#efirstname").val(value.employeeFirstName);
-                $("#hidempid").val(value.employeeId);
-                $("#elastname").val(value.employeeLastName);
-                $("#eemail").val(value.employeeEmail);
-                $("#erole").val(value.employeeRole);
-                $("#edepartment").val(value.employeeDepartment);
-                $("#estatus").val(value.status);
-                $("#eposition").val(value.position);
-            });
+            //$.each(data.data, function (key, value) {
+            //    $("#efirstname").val(value.employeeFirstName);
+            //    $("#hidempid").val(value.employeeId);
+            //    $("#elastname").val(value.employeeLastName);
+            //    $("#eemail").val(value.employeeEmail);
+            //    $("#erole").val(value.employeeRole);
+            //    $("#edepartment").val(value.employeeDepartment);
+            //    $("#estatus").val(value.status);
+            //    $("#eposition").val(value.position);
+            //});
         },
         error: function (e) {
             console.log(e);

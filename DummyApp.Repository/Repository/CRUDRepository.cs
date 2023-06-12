@@ -15,7 +15,7 @@ namespace DummyApp.Repository.Repository
     public class CRUDRepository : ICRUDRepository
     {
         private string connectionString = "Data Source=PCT38\\SQL2019;Initial Catalog=DummyApp;User Id=sa;Password=Tatva@123;TrustServerCertificate=True;Integrated Security=True";
-        
+
         #region Add New Employee
         public void AddNewEmployee(string firstname, string lastname, string email, string role, string position, string department, string status, Employee employee)
         {
@@ -126,9 +126,9 @@ namespace DummyApp.Repository.Repository
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(connectionString))
+                using (SqlConnection con = new(connectionString))
                 {
-                    using (SqlCommand cmd = new SqlCommand("sp_deleteEmployee", con))
+                    using (SqlCommand cmd = new("sp_deleteEmployee", con))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.Add("@deleted_at", SqlDbType.DateTime).Value = DateTime.Now;

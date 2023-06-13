@@ -9,6 +9,8 @@ public partial class Employee
 
     public string? EmployeeFirstName { get; set; }
 
+    public string? EmployeeLastName { get; set; }
+
     public string? EmployeeEmail { get; set; }
 
     public string? EmployeeRole { get; set; }
@@ -18,8 +20,6 @@ public partial class Employee
     public string? Status { get; set; }
 
     public string? Position { get; set; }
-
-    public string? EmployeeLastName { get; set; }
 
     public DateTime? CreatedAt { get; set; }
 

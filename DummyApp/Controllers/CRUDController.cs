@@ -105,8 +105,10 @@ namespace DummyApp.Controllers
         /// <param name="EmployeeId"></param>
         /// <returns></returns>
         [HttpGet]
-        public JsonResult GetSingleEmployeeRecord(int EmployeeId)
+        public JsonResult GetSingleEmployeeRecord(int EmployeeID)
         {
+            ArgumentNullException.ThrowIfNull(EmployeeID);
+
             List<Employee> employees = new();
 
             try
@@ -115,7 +117,7 @@ namespace DummyApp.Controllers
                 using (SqlCommand cmd = new("sp_GetSingleEmolyee", con))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@Employee_id", EmployeeId);
+                    cmd.Parameters.AddWithValue("@Employee_id", EmployeeID);
                     con.Open();
 
                     using (var reader = cmd.ExecuteReader())
@@ -147,64 +149,65 @@ namespace DummyApp.Controllers
                 throw;
             }
         }
-        #endregion
-
-        //public JsonResult GetSingleEmployeeRecord(int EmployeeId)
-        //{
-        //    var jsonResult = new StringBuilder(); // StringBuilder class can be used when you want to modify a string without creating a new object.
-        //    List<Employee> employees = new List<Employee>();
-        //    try
-        //    {
-        //        using (SqlConnection con = new(connectionString))  // Establishing connection with database 
-        //        {
-        //            using (SqlCommand cmd = new SqlCommand("sp_GetSingleEmolyee", con))
-        //            {
-        //                cmd.CommandType = CommandType.StoredProcedure;
-        //                cmd.Parameters.AddWithValue("@Employee_id", EmployeeId);
-        //                con.Open();  // Opening a connection
-
-        //                var reader = cmd.ExecuteReader();
-        //                if (!reader.HasRows)
-        //                {
-        //                    jsonResult.Append("[]");
-        //                }
-
-        //                while (reader.Read())
-        //                {
-        //                    Employee employee = new Employee()
-        //                    {
-        //                        EmployeeId = (int)reader["Employee_id"],
-        //                        EmployeeFirstName = (string)reader["Employee_FirstName"],
-        //                        EmployeeLastName = (string)reader["Employee_LastName"],
-        //                        EmployeeEmail = (string)reader["Employee_Email"],
-        //                        EmployeeRole = (string)reader["Employee_Role"],
-        //                        Position = (string)reader["Position"],
-        //                        EmployeeDepartment = (string)reader["Employee_Department"],
-        //                        Status = (string)reader["Status"],
-        //                    };
-        //                    employees.Append(employee); //Appends information to the end of the current StringBuilder
-        //                    employees.Add(employee);
-        //                }
-
-        //            }
-        //        }
-
-        //        return Json(new { data = employees });
-        //    }
-
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-
-        //    //return Json(jsonResult, JsonRequestBehavior.AllowGet);
-        //    //return Json(new { data = jsonResult });
-
-
-        //    //<--------------- Previous Approch --------------------->
-
-        //    //var Employee = _dummyAppContext.Employees.Where(emp => emp.EmployeeId == EmployeeId).FirstOrDefault();
-        //}
-
     }
+    #endregion
+
+    //public JsonResult GetSingleEmployeeRecord(int EmployeeId)
+    //{
+    //    var jsonResult = new StringBuilder(); // StringBuilder class can be used when you want to modify a string without creating a new object.
+    //    List<Employee> employees = new List<Employee>();
+    //    try
+    //    {
+    //        using (SqlConnection con = new(connectionString))  // Establishing connection with database 
+    //        {
+    //            using (SqlCommand cmd = new SqlCommand("sp_GetSingleEmolyee", con))
+    //            {
+    //                cmd.CommandType = CommandType.StoredProcedure;
+    //                cmd.Parameters.AddWithValue("@Employee_id", EmployeeId);
+    //                con.Open();  // Opening a connection
+
+    //                var reader = cmd.ExecuteReader();
+    //                if (!reader.HasRows)
+    //                {
+    //                    jsonResult.Append("[]");
+    //                }
+
+    //                while (reader.Read())
+    //                {
+    //                    Employee employee = new Employee()
+    //                    {
+    //                        EmployeeId = (int)reader["Employee_id"],
+    //                        EmployeeFirstName = (string)reader["Employee_FirstName"],
+    //                        EmployeeLastName = (string)reader["Employee_LastName"],
+    //                        EmployeeEmail = (string)reader["Employee_Email"],
+    //                        EmployeeRole = (string)reader["Employee_Role"],
+    //                        Position = (string)reader["Position"],
+    //                        EmployeeDepartment = (string)reader["Employee_Department"],
+    //                        Status = (string)reader["Status"],
+    //                    };
+    //                    employees.Append(employee); //Appends information to the end of the current StringBuilder
+    //                    employees.Add(employee);
+    //                }
+
+    //            }
+    //        }
+
+    //        return Json(new { data = employees });
+    //    }
+
+    //    catch (Exception ex)
+    //    {
+    //        throw ex;
+    //    }
+
+    //    //return Json(jsonResult, JsonRequestBehavior.AllowGet);
+    //    //return Json(new { data = jsonResult });
+
+
+    //    //<--------------- Previous Approch --------------------->
+
+    //    //var Employee = _dummyAppContext.Employees.Where(emp => emp.EmployeeId == EmployeeId).FirstOrDefault();
+    //}
+
+
 }

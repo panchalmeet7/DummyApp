@@ -13,6 +13,11 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
+using System.Drawing;
+using Microsoft.EntityFrameworkCore;
+using System.Drawing.Imaging;
+using System.Text;
+
 
 namespace DummyApp.Controllers
 {
@@ -48,37 +53,34 @@ namespace DummyApp.Controllers
             try
             {
                 //bool status = Validation_Input_UserEmail_Twice(model);
+                using SqlConnection con = new(connectionString);  // establishing connection with database 
 
-                using (SqlConnection con = new SqlConnection(connectionString))  // establishing connection with database 
+                using (SqlCommand cmd = new SqlCommand("sp_login_user", con))
                 {
-
-                    using (SqlCommand cmd = new SqlCommand("sp_login_user", con))
+                    await con.OpenAsync();  // opening a connection
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@Email", SqlDbType.VarChar).Value = LoginViewModel.Email; // Adding Values into params
+                    cmd.Parameters.Add("@Password", SqlDbType.VarChar).Value = LoginViewModel.Password; // Adding Values into params
+                    int status;
+                    status = Convert.ToInt16(cmd.ExecuteScalar()); // ExecuteScalar method is used to retrieve a single value from DB
+                    if (status == 1)
                     {
-                        await con.OpenAsync();  // opening a connection
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.Add("@Email", SqlDbType.VarChar).Value = LoginViewModel.Email; // Adding Values into params
-                        cmd.Parameters.Add("@Password", SqlDbType.VarChar).Value = LoginViewModel.Password; // Adding Values into params
-                        int status;
-                        status = Convert.ToInt16(cmd.ExecuteScalar()); // ExecuteScalar method is used to retrieve a single value from DB
-                        if (status == 1)
-                        {
-                            var userFirstName = _dummyAppContext.Users.Where(data => data.Email == LoginViewModel.Email).Select(user => user.FirstName).FirstOrDefault();
-                            var identity = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, userFirstName) }, CookieAuthenticationDefaults.AuthenticationScheme);
-                            var principal = new ClaimsPrincipal(identity);
-                            HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-                            HttpContext.Session.SetString("Email", LoginViewModel.Email);
-                            ViewBag.EmailID = HttpContext.Session.GetString("Email");
-                            return RedirectToAction("Index", "CRUD");
-                        }
-                        else
-                        {
-                            TempData["Error"] = "Invalid User Credentials!!";
-                            return RedirectToAction("Login", "Account");
-                        }
-
-                        cmd.ExecuteNonQuery(); // executing the query with given params
-                        con.Close();
+                        var userFirstName = _dummyAppContext.Users.Where(data => data.Email == LoginViewModel.Email).Select(user => user.FirstName).FirstOrDefault();
+                        var identity = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, userFirstName) }, CookieAuthenticationDefaults.AuthenticationScheme);
+                        var principal = new ClaimsPrincipal(identity);
+                        HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+                        HttpContext.Session.SetString("Email", LoginViewModel.Email);
+                        ViewBag.EmailID = HttpContext.Session.GetString("Email");
+                        return RedirectToAction("Index", "CRUD");
                     }
+                    else
+                    {
+                        TempData["Error"] = "Invalid User Credentials!!";
+                        return RedirectToAction("Login", "Account");
+                    }
+
+                    cmd.ExecuteNonQuery(); // executing the query with given params
+                    con.Close();
                 }
 
             }
@@ -106,12 +108,19 @@ namespace DummyApp.Controllers
         {
             return View();
         }
+
+        /// <summary>
+        /// redirect to login if email is not already exists
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult Registration(RegistrationViewModel model, User user)
         {
             var users = _dummyAppContext.Users.Where(u => u.Email == model.Email).FirstOrDefault();
 
-            if (users.Email == model.Email)
+            if (users?.Email == model.Email)
             {
                 TempData["Error"] = "Oops Email already exists, Please try with another Email!";
             }
@@ -122,31 +131,7 @@ namespace DummyApp.Controllers
             }
             return View();
         }
-        //public IActionResult Register(RegistrationViewModel model)
-        //{
-        //    try
-        //    {
-        //        if (model != null)
-        //        {
-        //            bool status = _accountRepository.Validation_Input_UserEmail_Twice(model);
-        //            if (status)
-        //            {
-        //                ViewBag.Message = "Opss User Name already exsist, Please try another User Name !!!";
-        //                return View("Registration");
-        //            }
-        //            else
-        //            {
-        //                ViewBag.Message = "Register New User successfully..";
-        //                return View("Registration");
-        //            }
-        //        }
-        //        return View("Registration");
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
-        //}
+
         public IActionResult ResetPassword()
         {
             return View();
@@ -156,6 +141,7 @@ namespace DummyApp.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public IActionResult ForgotPassword(ForgotPasswordViewModel forgotPasswordViewModel)
         {
@@ -178,14 +164,56 @@ namespace DummyApp.Controllers
 
             return View();
         }
+    
+        [HttpGet]
+        public JsonResult GetImageData()
+        {
+            var images = _dummyAppContext.ImageComps.FromSqlRaw("sp_getimage").ToList();
+
+            return Json(images);
+        }
+    
+        [HttpGet]
+        public IActionResult ImageUploadThumb()
+        {
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult ImageUploadThumb(ImageUploadViewModel imageUploadViewModel)
+        {
+            if (imageUploadViewModel != null)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    imageUploadViewModel.ImagePath.CopyTo(memoryStream);
+                    var imageBytes = memoryStream.ToArray();
+                    var imageBlob = Convert.ToBase64String(imageBytes);
+                    var newimg = "data:image/png;base64," + imageBlob;
+                    //using (var image = Image.FromStream(memoryStream))
+                    //{
+                    //    var height = image.Height;
+                    //    var width = image.Width;
+                    //}
+
+                    ImageComp img = new ImageComp()
+                    {
+                        ImagePath = newimg
+                    };
+                    _dummyAppContext.ImageComps.Add(img);
+                    _dummyAppContext.SaveChanges();
+
+                }
+            }
+            return View();
+        }
 
         public IActionResult LogOut()
         {
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             var storedCookie = Request.Cookies.Keys;
             foreach (var cookie in storedCookie)
-
-
             {
                 Response.Cookies.Delete(cookie);
                 HttpContext.Session.Clear();
@@ -194,3 +222,39 @@ namespace DummyApp.Controllers
         }
     }
 }
+
+//var getImages = _dummyAppContext.ImageComps.FromSqlRaw("sp_getimage").ToList();
+//foreach (var image in getImages)
+//{
+//    var imageData = Convert.FromBase64String(image.ImagePath);
+
+//    using (var stream = new MemoryStream(imageData))
+//    {
+//        using (var originalImage = Image.FromStream(stream))
+//        {
+//            using (var compressedImage = new Bitmap(originalImage.Width, originalImage.Height))
+//            {
+//                using (var graphics = Graphics.FromImage(compressedImage))
+//                {
+//                    var compressionQuality = 50;
+
+//                    var compressionFormat = ImageFormat.Jpeg;
+
+//                    var encoderParameters = new EncoderParameters(1);
+//                    encoderParameters.Param[0] = new EncoderParameter(Encoder.Quality, compressionQuality);
+
+//                    graphics.DrawImage(originalImage, new Rectangle(0, 0, originalImage.Width, originalImage.Height));
+//                    graphics.Dispose();
+
+//                    using (var outputStream = new MemoryStream())
+//                    {
+//                        compressedImage.Save(outputStream, GetEncoderInfo(compressionFormat), encoderParameters);
+
+//                        var compressedImageData = outputStream.ToArray();
+//                    }
+//                }
+//            }
+//        }
+//    }
+
+//}

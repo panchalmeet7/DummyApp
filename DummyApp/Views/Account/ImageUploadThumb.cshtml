@@ -1,0 +1,36 @@
+﻿@using DummyApp.Entities.ViewModels
+@model ImageUploadViewModel
+
+
+<div class="container-xl py-4">
+    <h4>Thumbnail of an Image</h4>
+    <form method="post" asp-action="ImageUploadThumb" asp-controller="Account" enctype="multipart/form-data">
+        <input type="file" name="ImagePath" id="avatar" onchange="form.submit()" />
+    </form>
+    <div id="imgdiv">
+    </div>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        //console.log("function call");
+        $.ajax({
+            url:"/Account/GetImageData",
+            type:"GET",
+            success : function(data){
+                //console.log(data);
+                $.each(data, function(key, value){
+                    //console.log(value.imagePath);
+                    var elem = document.createElement("img");
+                    elem.className = "p-4";
+                    elem.setAttribute("src", value.imagePath);
+                    document.getElementById("imgdiv").appendChild(elem);
+                })
+            },
+            error: function(e){
+                console.log(e);
+            }
+        })
+    });
+</script>

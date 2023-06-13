@@ -87,7 +87,6 @@ function AddEmployee() {
 
 }
 
-
 //Update Employee Data
 
 function UpdateEmployeeData() {
@@ -149,17 +148,22 @@ function RetriveEmployeeData(EmployeeId) {
             EmployeeId: EmployeeId
         },
         success: function (data) {
-            console.log(data);
-            //$.each(data.data, function (key, value) {
-            //    $("#efirstname").val(value.employeeFirstName);
-            //    $("#hidempid").val(value.employeeId);
-            //    $("#elastname").val(value.employeeLastName);
-            //    $("#eemail").val(value.employeeEmail);
-            //    $("#erole").val(value.employeeRole);
-            //    $("#edepartment").val(value.employeeDepartment);
-            //    $("#estatus").val(value.status);
-            //    $("#eposition").val(value.position);
-            //});
+            //console.log(data);
+            if (data.data.length == 0) {
+                alert("Error While Getting User Details ");
+            }
+            else {
+                $.each(data.data, function (key, value) {
+                    $("#efirstname").val(value.employeeFirstName);
+                    $("#hidempid").val(value.employeeId);
+                    $("#elastname").val(value.employeeLastName);
+                    $("#eemail").val(value.employeeEmail);
+                    $("#erole").val(value.employeeRole);
+                    $("#edepartment").val(value.employeeDepartment);
+                    $("#estatus").val(value.status);
+                    $("#eposition").val(value.position);
+                });
+            }
         },
         error: function (e) {
             console.log(e);
